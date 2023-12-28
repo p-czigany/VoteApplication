@@ -2,6 +2,7 @@ package com.peterczigany.vote;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import org.junit.jupiter.api.Test;
 
@@ -33,6 +34,11 @@ class ProjectInitTest {
     var actual = testObject.getOk();
 
     assertThat(actual).isExactlyInstanceOf(String.class).isEqualTo("ok");
+  }
+
+  @Test
+  void testBooleanEquality() {
+    assertTrue(true);
   }
 
   @Test
