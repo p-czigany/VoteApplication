@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test;
 class TimeValidationTest {
 
   static class MyValidator {
-    void validateTime(LocalDateTime time) throws VoteException {
+    void validateTime(String timeString) throws VoteException {
       throw new VoteException("TIME:NULL");
     }
   }
