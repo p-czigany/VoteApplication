@@ -22,6 +22,7 @@ class ProjectInitTest {
   @Test
   void emptyTest() {}
 
+  @SuppressWarnings("all") // testing the testing framework - triviality is of the essence here
   @Test
   void testStringEquality() {
     assertEquals("ok", "ok");
