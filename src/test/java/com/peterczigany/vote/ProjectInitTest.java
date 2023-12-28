@@ -11,7 +11,7 @@ class ProjectInitTest {
   void emptyTest() {}
 
   @Test
-  void testStrinEquality() {
+  void testStringEquality() {
     assertEquals("ok", "ok");
   }
 }
