@@ -7,13 +7,18 @@ import org.junit.jupiter.api.Test;
 
 class TimeValidationTest {
 
+  private static final String TIME_NULL =
+      "Az időpont nem lehet null. Megadása kötelező. (ÉÉÉÉ-HH-NNTÓÓ:PP:MMZ formátumban.)";
+  private static final String TIME_EMPTY =
+      "Az időpont nem lehet üres. Megadása kötelező. (ÉÉÉÉ-HH-NNTÓÓ:PP:MMZ formátumban.)";
+
   static class MyValidator {
     void validateTime(String timeString) throws VoteException {
       if (timeString == null) {
-        throw new VoteException("TIME:NULL");
+        throw new VoteException(TIME_NULL);
       }
       if (timeString.isEmpty()) {
-        throw new VoteException("TIME:EMPTY");
+        throw new VoteException(TIME_EMPTY);
       }
     }
   }
@@ -24,7 +29,7 @@ class TimeValidationTest {
 
     Throwable exception = assertThrows(VoteException.class, () -> myValidator.validateTime(null));
 
-    assertThat(exception.getMessage()).isEqualTo("TIME:NULL");
+    assertThat(exception.getMessage()).isEqualTo(TIME_NULL);
   }
 
   @Test
@@ -33,6 +38,6 @@ class TimeValidationTest {
 
     Throwable exception = assertThrows(VoteException.class, () -> myValidator.validateTime(""));
 
-    assertThat(exception.getMessage()).isEqualTo("TIME:EMPTY");
+    assertThat(exception.getMessage()).isEqualTo(TIME_EMPTY);
   }
 }
