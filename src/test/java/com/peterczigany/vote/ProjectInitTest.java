@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Test;
 
 class ProjectInitTest {
 
-  static class MyObject {
+  static class TestType {
     String getOk() {
       return "ok";
     }
@@ -24,7 +24,7 @@ class ProjectInitTest {
 
   @Test
   void testStringReturnValue() {
-    MyObject myObject = new MyObject();
-    assertThat(myObject.getOk()).isExactlyInstanceOf(String.class);
+    TestType testObject = new TestType();
+    assertThat(testObject.getOk()).isExactlyInstanceOf(String.class);
   }
 }
