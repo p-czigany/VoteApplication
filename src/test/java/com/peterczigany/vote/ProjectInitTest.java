@@ -11,10 +11,6 @@ class ProjectInitTest {
     String getOk() {
       return "ok";
     }
-
-    boolean getTrue() {
-      return true;
-    }
   }
 
   @SuppressWarnings("java:S2699") // this is an empty test method by definition
@@ -29,7 +25,10 @@ class ProjectInitTest {
   @Test
   void testStringReturnValue() {
     TestType testObject = new TestType();
-    assertThat(testObject.getOk()).isExactlyInstanceOf(String.class);
-    assertThat(testObject.getOk()).isEqualTo("ok");
+
+    var actual = testObject.getOk();
+
+    assertThat(actual).isExactlyInstanceOf(String.class);
+    assertThat(actual).isEqualTo("ok");
   }
 }
