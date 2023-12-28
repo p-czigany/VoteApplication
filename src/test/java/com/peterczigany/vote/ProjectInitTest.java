@@ -32,8 +32,7 @@ class ProjectInitTest {
 
     var actual = testObject.getOk();
 
-    assertThat(actual).isExactlyInstanceOf(String.class);
-    assertThat(actual).isEqualTo("ok");
+    assertThat(actual).isExactlyInstanceOf(String.class).isEqualTo("ok");
   }
 
   @Test
