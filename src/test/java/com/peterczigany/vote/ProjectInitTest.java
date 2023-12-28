@@ -17,6 +17,10 @@ class ProjectInitTest {
     boolean getTrue() {
       return true;
     }
+
+    void throwException() throws Exception {
+      throw new Exception();
+    }
   }
 
   @SuppressWarnings("java:S2699") // this is an empty test method by definition
@@ -59,5 +63,12 @@ class ProjectInitTest {
         () -> {
           throw new Exception();
         });
+  }
+
+  @Test
+  void testExceptionThrownByMethod() {
+    TestType testObject = new TestType();
+
+    assertThrows(Exception.class, testObject::throwException);
   }
 }
