@@ -55,6 +55,6 @@ class ProjectInitTest {
   void testExceptionThrownByMethod() {
     TestType testObject = new TestType();
 
-    assertThrows(Exception.class, testObject::throwException);
+    assertThrows(VoteException.class, testObject::throwException);
   }
 }
