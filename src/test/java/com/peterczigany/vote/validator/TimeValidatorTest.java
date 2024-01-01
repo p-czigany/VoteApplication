@@ -1,57 +1,37 @@
-package com.peterczigany.vote;
+package com.peterczigany.vote.validator;
 
+import static com.peterczigany.vote.validator.TimeValidator.TIME_BAD_FORMAT;
+import static com.peterczigany.vote.validator.TimeValidator.TIME_EMPTY;
+import static com.peterczigany.vote.validator.TimeValidator.TIME_NULL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeParseException;
+import com.peterczigany.vote.VoteException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class TimeValidationTest {
+class TimeValidatorTest {
 
-  private static final String TIME_NULL = "Az időpont nem lehet null. Megadása kötelező.";
-  private static final String TIME_EMPTY = "Az időpont nem lehet üres. Megadása kötelező.";
-  private static final String TIME_BAD_FORMAT =
-      "Az időpont formátuma nem megfelelő. (MSZ ISO 8601:2003 formátumban szükséges megadni.)";
-
-  static class MyValidator {
-    @SuppressWarnings("ResultOfMethodCallIgnored") // parsing time string to see if it's possible
-    void validateTime(String timeString) throws VoteException {
-      if (timeString == null) {
-        throw new VoteException(TIME_NULL);
-      }
-      if (timeString.isEmpty()) {
-        throw new VoteException(TIME_EMPTY);
-      }
-      try {
-        ZonedDateTime.parse(timeString.replace(" ", "T"));
-      } catch (DateTimeParseException e) {
-        throw new VoteException(TIME_BAD_FORMAT);
-      }
-    }
-  }
-
-  private MyValidator myValidator;
+  private TimeValidator timeValidator;
 
   @BeforeEach
   void init() {
-    myValidator = new MyValidator();
+    timeValidator = new TimeValidator();
   }
 
   @Test
   void testTimeCannotBeNull() {
-    Throwable exception = assertThrows(VoteException.class, () -> myValidator.validateTime(null));
+    Throwable exception = assertThrows(VoteException.class, () -> timeValidator.validateTime(null));
 
     assertThat(exception.getMessage()).isEqualTo(TIME_NULL);
   }
 
   @Test
   void testTimeCannotBeEmpty() {
-    Throwable exception = assertThrows(VoteException.class, () -> myValidator.validateTime(""));
+    Throwable exception = assertThrows(VoteException.class, () -> timeValidator.validateTime(""));
 
     assertThat(exception.getMessage()).isEqualTo(TIME_EMPTY);
   }
@@ -68,7 +48,7 @@ class TimeValidationTest {
       })
   void testTimeIsNotValidISO8601String(String timeString) {
     Exception exception =
-        assertThrows(VoteException.class, () -> myValidator.validateTime(timeString));
+        assertThrows(VoteException.class, () -> timeValidator.validateTime(timeString));
 
     assertThat(exception.getMessage()).isEqualTo(TIME_BAD_FORMAT);
   }
@@ -85,6 +65,6 @@ class TimeValidationTest {
         "2023-12-23T14:30:45+01"
       })
   void testSuccessfulTimeStringValidation(String timeString) {
-    assertDoesNotThrow(() -> myValidator.validateTime(timeString));
+    assertDoesNotThrow(() -> timeValidator.validateTime(timeString));
   }
 }

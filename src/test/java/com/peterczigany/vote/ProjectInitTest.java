@@ -9,20 +9,6 @@ import org.junit.jupiter.api.Test;
 
 class ProjectInitTest {
 
-  static class TestType {
-    String getOk() {
-      return "ok";
-    }
-
-    boolean getTrue() {
-      return true;
-    }
-
-    void throwException() throws Exception {
-      throw new Exception();
-    }
-  }
-
   @SuppressWarnings("java:S2699") // this is an empty test method by definition
   @Test
   void emptyTest() {}
