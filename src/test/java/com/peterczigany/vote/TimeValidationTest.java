@@ -4,7 +4,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.peterczigany.vote.TypeValidationTest.MyValidator;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
 import org.junit.jupiter.api.BeforeEach;
