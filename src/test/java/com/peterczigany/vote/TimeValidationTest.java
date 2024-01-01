@@ -19,6 +19,7 @@ class TimeValidationTest {
       "Az időpont formátuma nem megfelelő. (MSZ ISO 8601:2003 formátumban szükséges megadni.)";
 
   static class MyValidator {
+    @SuppressWarnings("ResultOfMethodCallIgnored") // parsing time string to see if it's possible
     void validateTime(String timeString) throws VoteException {
       if (timeString == null) {
         throw new VoteException(TIME_NULL);
