@@ -4,8 +4,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.peterczigany.vote.TypeValidationTest.MyValidator;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeParseException;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -33,10 +35,15 @@ class TimeValidationTest {
     }
   }
 
+  private MyValidator myValidator;
+
+  @BeforeEach
+  void init() {
+    myValidator = new MyValidator();
+  }
+
   @Test
   void testTimeCannotBeNull() {
-    MyValidator myValidator = new MyValidator();
-
     Throwable exception = assertThrows(VoteException.class, () -> myValidator.validateTime(null));
 
     assertThat(exception.getMessage()).isEqualTo(TIME_NULL);
@@ -44,8 +51,6 @@ class TimeValidationTest {
 
   @Test
   void testTimeCannotBeEmpty() {
-    MyValidator myValidator = new MyValidator();
-
     Throwable exception = assertThrows(VoteException.class, () -> myValidator.validateTime(""));
 
     assertThat(exception.getMessage()).isEqualTo(TIME_EMPTY);
@@ -62,8 +67,6 @@ class TimeValidationTest {
         "2024-01-01T10:39:52−0630"
       })
   void testTimeIsNotValidISO8601String(String timeString) {
-    MyValidator myValidator = new MyValidator();
-
     Exception exception =
         assertThrows(VoteException.class, () -> myValidator.validateTime(timeString));
 
@@ -82,8 +85,6 @@ class TimeValidationTest {
         "2023-12-23T14:30:45+01"
       })
   void testSuccessfulTimeStringValidation(String timeString) {
-    MyValidator myValidator = new MyValidator();
-
     assertDoesNotThrow(() -> myValidator.validateTime(timeString));
   }
 }

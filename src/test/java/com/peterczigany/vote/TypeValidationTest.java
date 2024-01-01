@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -32,10 +33,15 @@ class TypeValidationTest {
     }
   }
 
+  private MyValidator myValidator;
+
+  @BeforeEach
+  void init() {
+    myValidator = new MyValidator();
+  }
+
   @Test
   void testTypeCannotBeNull() {
-    MyValidator myValidator = new MyValidator();
-
     Throwable exception = assertThrows(VoteException.class, () -> myValidator.validateType(null));
 
     assertThat(exception.getMessage()).isEqualTo(TYPE_NULL);
@@ -43,8 +49,6 @@ class TypeValidationTest {
 
   @Test
   void testTypeCannotBeEmpty() {
-    MyValidator myValidator = new MyValidator();
-
     Throwable exception = assertThrows(VoteException.class, () -> myValidator.validateType(""));
 
     assertThat(exception.getMessage()).isEqualTo(TYPE_EMPTY);
@@ -62,8 +66,6 @@ class TypeValidationTest {
         "123"
       })
   void testTypeNotValid(String typeString) {
-    MyValidator myValidator = new MyValidator();
-
     Throwable exception =
         assertThrows(VoteException.class, () -> myValidator.validateType(typeString));
 
