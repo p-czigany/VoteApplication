@@ -34,7 +34,7 @@ class TimeValidationTest {
   }
 
   @Test
-  void testTimeCannotBeNull() throws VoteException {
+  void testTimeCannotBeNull() {
     MyValidator myValidator = new MyValidator();
 
     Throwable exception = assertThrows(VoteException.class, () -> myValidator.validateTime(null));
@@ -43,7 +43,7 @@ class TimeValidationTest {
   }
 
   @Test
-  void testTimeCannotBeEmpty() throws VoteException {
+  void testTimeCannotBeEmpty() {
     MyValidator myValidator = new MyValidator();
 
     Throwable exception = assertThrows(VoteException.class, () -> myValidator.validateTime(""));
@@ -61,7 +61,7 @@ class TimeValidationTest {
         "2024-01-01T10:39:52−08",
         "2024-01-01T10:39:52−0630"
       })
-  void testTimeIsNotValidISO8601String(String timeString) throws VoteException {
+  void testTimeIsNotValidISO8601String(String timeString) {
     MyValidator myValidator = new MyValidator();
 
     Exception exception =
