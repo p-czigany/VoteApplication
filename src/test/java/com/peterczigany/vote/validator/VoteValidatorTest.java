@@ -30,7 +30,16 @@ class VoteValidatorTest {
         "{ \"szavazat\": \"i\" }", // rep is missing
         "{ \"kepviselo\": \"Kepviselo1\" }", // vote value is missing
         "{ \"kepviselo\": \"\", \"szavazat\": \"i\" }", // rep is empty
-        "{ \"kepviselo\": \"Kepviselo1\", \"szavazat\": \"\" }" // vote value is empty
+        "{ \"kepviselo\": \"Kepviselo1\", \"szavazat\": \"\" }", // vote value is empty
+        """
+              {
+                  "kepviselo":"Kepviselo3",
+                  "szavazat":{
+                      "kepviselo":"Kepviselo2",
+                      "szavazat":"n"
+                  }
+              }
+        """
       })
   void testInvalidVote(String voteString) {
     assertThrows(VoteException.class, () -> voteValidator.validateVote(voteString));
