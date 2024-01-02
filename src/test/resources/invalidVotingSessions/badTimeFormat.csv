@@ -1,0 +1,120 @@
+"{
+    ""idopont"": ""2023-12-23 14:30:45"",
+    ""targy"": ""Szavazás tárgya"",
+    ""tipus"": ""j"",
+    ""elnok"": ""Kepviselo1"",
+    ""szavazatok"": [
+        {
+            ""kepviselo"": ""Kepviselo1"",
+            ""szavazat"": ""i""
+        },
+        {
+            ""kepviselo"": ""Kepviselo2"",
+            ""szavazat"": ""n""
+        },
+        {
+            ""kepviselo"": ""Kepviselo3"",
+            ""szavazat"": ""t""
+        }
+    ]
+}",
+"{
+    ""idopont"": ""2023-12-23T14:30:45+0130"",
+    ""targy"": ""Szavazás tárgya"",
+    ""tipus"": ""j"",
+    ""elnok"": ""Kepviselo1"",
+    ""szavazatok"": [
+        {
+            ""kepviselo"": ""Kepviselo1"",
+            ""szavazat"": ""i""
+        },
+        {
+            ""kepviselo"": ""Kepviselo2"",
+            ""szavazat"": ""n""
+        },
+        {
+            ""kepviselo"": ""Kepviselo3"",
+            ""szavazat"": ""t""
+        }
+    ]
+}",
+"{
+    ""idopont"": ""20240101T173952Z"",
+    ""targy"": ""Szavazás tárgya"",
+    ""tipus"": ""j"",
+    ""elnok"": ""Kepviselo1"",
+    ""szavazatok"": [
+        {
+            ""kepviselo"": ""Kepviselo1"",
+            ""szavazat"": ""i""
+        },
+        {
+            ""kepviselo"": ""Kepviselo2"",
+            ""szavazat"": ""n""
+        },
+        {
+            ""kepviselo"": ""Kepviselo3"",
+            ""szavazat"": ""t""
+        }
+    ]
+}",
+"{
+    ""idopont"": ""2024-01-01T10:39:52−08:00"",
+    ""targy"": ""Szavazás tárgya"",
+    ""tipus"": ""j"",
+    ""elnok"": ""Kepviselo1"",
+    ""szavazatok"": [
+        {
+            ""kepviselo"": ""Kepviselo1"",
+            ""szavazat"": ""i""
+        },
+        {
+            ""kepviselo"": ""Kepviselo2"",
+            ""szavazat"": ""n""
+        },
+        {
+            ""kepviselo"": ""Kepviselo3"",
+            ""szavazat"": ""t""
+        }
+    ]
+}",
+"{
+    ""idopont"": ""2024-01-01T10:39:52−08"",
+    ""targy"": ""Szavazás tárgya"",
+    ""tipus"": ""j"",
+    ""elnok"": ""Kepviselo1"",
+    ""szavazatok"": [
+        {
+            ""kepviselo"": ""Kepviselo1"",
+            ""szavazat"": ""i""
+        },
+        {
+            ""kepviselo"": ""Kepviselo2"",
+            ""szavazat"": ""n""
+        },
+        {
+            ""kepviselo"": ""Kepviselo3"",
+            ""szavazat"": ""t""
+        }
+    ]
+}",
+"{
+    ""idopont"": ""2024-01-01T10:39:52−0630"",
+    ""targy"": ""Szavazás tárgya"",
+    ""tipus"": ""j"",
+    ""elnok"": ""Kepviselo1"",
+    ""szavazatok"": [
+        {
+            ""kepviselo"": ""Kepviselo1"",
+            ""szavazat"": ""i""
+        },
+        {
+            ""kepviselo"": ""Kepviselo2"",
+            ""szavazat"": ""n""
+        },
+        {
+            ""kepviselo"": ""Kepviselo3"",
+            ""szavazat"": ""t""
+        }
+    ]
+}"
