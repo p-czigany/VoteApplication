@@ -5,11 +5,8 @@ import java.util.List;
 
 public class VoteValueValidator {
 
-  static final String VOTE_VALUE_NULL =
-      "A szavazat értéke nem lehet null. Megadása kötelező.";
-  static final String VOTE_VALUE_EMPTY =
-      "A szavazat értéke nem lehet üres. Megadása kötelező.";
-
+  static final String VOTE_VALUE_NULL = "A szavazat értéke nem lehet null. Megadása kötelező.";
+  static final String VOTE_VALUE_EMPTY = "A szavazat értéke nem lehet üres. Megadása kötelező.";
   static final String VOTE_VALUE_NOT_VALID =
       "A szavazat értéke nem lehet %s. Csak 'i', 'n' és 't' adható meg.";
 
