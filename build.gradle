@@ -1,15 +1,8 @@
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '3.2.1'
-	id 'io.spring.dependency-management' version '1.1.4'
+    id 'java'
+    id 'org.springframework.boot' version '3.2.1'
+    id 'io.spring.dependency-management' version '1.1.4'
 }
-
-//sourceSets {
-//    intTest {
-//        compileClasspath += sourceSets.main.output
-//        runtimeClasspath += sourceSets.main.output
-//    }
-//}
 
 configurations {
     intTestImplementation.extendsFrom implementation
@@ -20,42 +13,20 @@ group = 'com.peterczigany'
 version = '0.0.1-SNAPSHOT'
 
 java {
-	sourceCompatibility = '17'
+    sourceCompatibility = '17'
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter'
 //    implementation 'org.springframework.boot:spring-boot-starter-web'
-	runtimeOnly 'com.h2database:h2'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-//    testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.3.1'
-//    intTestImplementation 'org.junit.jupiter:junit-jupiter:5.7.1'
-//    intTestRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-
+    runtimeOnly 'com.h2database:h2'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 test {
     useJUnitPlatform()
 }
-
-//tasks.register('integrationTest', Test) {
-//    description = 'Runs integration tests.'
-//    group = 'verification'
-//
-//    testClassesDirs = sourceSets.intTest.output.classesDirs
-//    classpath = sourceSets.intTest.runtimeClasspath
-//    shouldRunAfter test
-//
-//    useJUnitPlatform()
-//
-//    testLogging {
-//        events "passed"
-//    }
-//}
-
-//check.dependsOn integrationTest

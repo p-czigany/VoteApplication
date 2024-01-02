@@ -8,17 +8,17 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.peterczigany.vote.VoteException;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class TimeValidatorTest {
 
-  private TimeValidator timeValidator;
+  private static TimeValidator timeValidator;
 
-  @BeforeEach
-  void init() {
+  @BeforeAll
+  static void setup() {
     timeValidator = new TimeValidator();
   }
 

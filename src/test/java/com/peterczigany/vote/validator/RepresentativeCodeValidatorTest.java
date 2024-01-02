@@ -6,15 +6,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.peterczigany.vote.VoteException;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 class RepresentativeCodeValidatorTest {
 
-  private RepresentativeCodeValidator representativeCodeValidator;
+  private static RepresentativeCodeValidator representativeCodeValidator;
 
-  @BeforeEach
-  void init() {
+  @BeforeAll
+  static void setup() {
     representativeCodeValidator = new RepresentativeCodeValidator();
   }
 

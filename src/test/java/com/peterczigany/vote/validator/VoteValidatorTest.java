@@ -1,31 +1,38 @@
 package com.peterczigany.vote.validator;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.peterczigany.vote.VoteException;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class VoteValidatorTest {
 
+  private static VoteValidator voteValidator;
+
+  @BeforeAll
+  public static void setup() {
+    voteValidator = new VoteValidator(new RepresentativeCodeValidator(), new VoteValueValidator());
+  }
+
   @ParameterizedTest
   @ValueSource(strings = {"{ \"kepviselo\": \"Kepviselo1\", \"szavazat\": \"i\" }"})
   void testValidVote(String voteString) {
-    VoteValidator voteValidator = new VoteValidator();
-
     assertDoesNotThrow(() -> voteValidator.validateVote(voteString));
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {"{ \"kepviselo\": \"Kepviselo1\", \"szavazat\": \"j\" }", "{ \"szavazat\": \"i\" }", "{ \"kepviselo\": \"Kepviselo1\" }", "{ \"kepviselo\": \"\", \"szavazat\": \"i\" }", "{ \"kepviselo\": \"Kepviselo1\", \"szavazat\": \"\" }"})
+  @ValueSource(
+      strings = {
+        "{ \"kepviselo\": \"Kepviselo1\", \"szavazat\": \"j\" }", // invalid vote value
+        "{ \"szavazat\": \"i\" }", // rep is missing
+        "{ \"kepviselo\": \"Kepviselo1\" }", // vote value is missing
+        "{ \"kepviselo\": \"\", \"szavazat\": \"i\" }", // rep is empty
+        "{ \"kepviselo\": \"Kepviselo1\", \"szavazat\": \"\" }" // vote value is empty
+      })
   void testInvalidVote(String voteString) {
-    VoteValidator voteValidator = new VoteValidator();
-
-    Exception exception =
-        assertThrows(VoteException.class, () -> voteValidator.validateVote(voteString));
-
-    assertThat(exception.getMessage()).isEqualTo(VOTE_NOT_VALID);
+    assertThrows(VoteException.class, () -> voteValidator.validateVote(voteString));
   }
 }

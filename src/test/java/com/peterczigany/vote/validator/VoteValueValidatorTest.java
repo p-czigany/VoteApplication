@@ -7,17 +7,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.peterczigany.vote.VoteException;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 class VoteValueValidatorTest {
 
-  private VoteValueValidator voteValueValidator;
+  private static VoteValueValidator voteValueValidator;
 
-  @BeforeEach
-  void init() {
+  @BeforeAll
+  static void setup() {
     voteValueValidator = new VoteValueValidator();
   }
 
@@ -43,7 +43,6 @@ class VoteValueValidatorTest {
     Exception exception =
         assertThrows(VoteException.class, () -> voteValueValidator.validateVoteValue(typeString));
 
-    assertThat(exception.getMessage())
-        .isEqualTo(String.format(VOTE_VALUE_NOT_VALID, typeString));
+    assertThat(exception.getMessage()).isEqualTo(String.format(VOTE_VALUE_NOT_VALID, typeString));
   }
 }
