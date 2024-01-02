@@ -4,6 +4,7 @@ import com.peterczigany.vote.VoteException;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.BasicJsonParser;
+import org.springframework.boot.json.JsonParseException;
 import org.springframework.boot.json.JsonParser;
 
 public class VoteValidator {
@@ -14,22 +15,23 @@ public class VoteValidator {
 
   private final RepresentativeCodeValidator repCodeValidator;
   private final VoteValueValidator voteValueValidator;
+  private final JsonParser jsonParser;
 
   @Autowired
   public VoteValidator(
       RepresentativeCodeValidator repCodeValidator, VoteValueValidator voteValueValidator) {
     this.repCodeValidator = repCodeValidator;
     this.voteValueValidator = voteValueValidator;
+    this.jsonParser = new BasicJsonParser();
   }
 
   public void validateVote(String voteJson) throws VoteException {
-    JsonParser parser = new BasicJsonParser();
-    Map<String, Object> voteMap = parser.parseMap(voteJson);
-    if (!(voteMap.get(REP_CODE_KEY) instanceof String)
-        || !(voteMap.get(VOTE_VALUE_KEY) instanceof String)) {
+    try {
+      Map<String, Object> voteMap = jsonParser.parseMap(voteJson);
+      repCodeValidator.validateRepresentativeCode((String) voteMap.get(REP_CODE_KEY));
+      voteValueValidator.validateVoteValue((String) voteMap.get(VOTE_VALUE_KEY));
+    } catch (JsonParseException | ClassCastException e) {
       throw new VoteException(String.format(VOTE_FORMAT_INVALID, voteJson));
     }
-    repCodeValidator.validateRepresentativeCode((String) voteMap.get(REP_CODE_KEY));
-    voteValueValidator.validateVoteValue((String) voteMap.get(VOTE_VALUE_KEY));
   }
 }

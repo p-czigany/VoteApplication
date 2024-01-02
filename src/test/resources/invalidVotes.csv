@@ -1,0 +1,31 @@
+" ""Kepviselo0"", ""i"" ",
+"
+    ""kepviselo"": ""Kepviselo0"",
+    ""szavazat"": ""i""
+",
+"{ }",
+"{
+    ""kepviselo"": ""Kepviselo1"",
+    ""szavazat"": ""j""
+}",
+"{
+    ""szavazat"": ""i""
+}",
+"{
+    ""kepviselo"": ""Kepviselo1""
+}",
+"{
+    ""kepviselo"": """",
+    ""szavazat"": ""i""
+}",
+"{
+    ""kepviselo"": ""Kepviselo1"",
+    ""szavazat"": """"
+}",
+"{
+    ""kepviselo"":""Kepviselo3"",
+    ""szavazat"":{
+        ""kepviselo"":""Kepviselo2"",
+        ""szavazat"":""n""
+    }
+}"
