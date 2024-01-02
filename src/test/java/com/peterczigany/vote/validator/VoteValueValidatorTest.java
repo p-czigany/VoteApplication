@@ -24,7 +24,7 @@ class VoteValueValidatorTest {
   @Test
   void testVoteValueCannotBeNull() {
     Exception exception =
-        assertThrows(VoteException.class, () -> voteValueValidator.validateVoteValue(null));
+        assertThrows(VoteException.class, () -> voteValueValidator.validate(null));
 
     assertThat(exception.getMessage()).isEqualTo(VOTE_VALUE_NULL);
   }
@@ -32,7 +32,7 @@ class VoteValueValidatorTest {
   @Test
   void testVoteValueCannotBeEmpty() {
     Exception exception =
-        assertThrows(VoteException.class, () -> voteValueValidator.validateVoteValue(""));
+        assertThrows(VoteException.class, () -> voteValueValidator.validate(""));
 
     assertThat(exception.getMessage()).isEqualTo(VOTE_VALUE_EMPTY);
   }
@@ -41,7 +41,7 @@ class VoteValueValidatorTest {
   @ValueSource(strings = {"I", "N", "T", "igen", "nem", "tartózkodás", "123"})
   void testVoteValueNotValid(String typeString) {
     Exception exception =
-        assertThrows(VoteException.class, () -> voteValueValidator.validateVoteValue(typeString));
+        assertThrows(VoteException.class, () -> voteValueValidator.validate(typeString));
 
     assertThat(exception.getMessage()).isEqualTo(String.format(VOTE_VALUE_NOT_VALID, typeString));
   }

@@ -23,14 +23,14 @@ class TypeValidatorTest {
 
   @Test
   void testTypeCannotBeNull() {
-    Throwable exception = assertThrows(VoteException.class, () -> typeValidator.validateType(null));
+    Throwable exception = assertThrows(VoteException.class, () -> typeValidator.validate(null));
 
     assertThat(exception.getMessage()).isEqualTo(TYPE_NULL);
   }
 
   @Test
   void testTypeCannotBeEmpty() {
-    Throwable exception = assertThrows(VoteException.class, () -> typeValidator.validateType(""));
+    Throwable exception = assertThrows(VoteException.class, () -> typeValidator.validate(""));
 
     assertThat(exception.getMessage()).isEqualTo(TYPE_EMPTY);
   }
@@ -48,7 +48,7 @@ class TypeValidatorTest {
       })
   void testTypeNotValid(String typeString) {
     Throwable exception =
-        assertThrows(VoteException.class, () -> typeValidator.validateType(typeString));
+        assertThrows(VoteException.class, () -> typeValidator.validate(typeString));
 
     assertThat(exception.getMessage()).isEqualTo(String.format(TYPE_NOT_VALID, typeString));
   }

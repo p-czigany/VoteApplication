@@ -23,7 +23,7 @@ class RepresentativeCodeValidatorTest {
     Exception exception =
         assertThrows(
             VoteException.class,
-            () -> representativeCodeValidator.validateRepresentativeCode(null));
+            () -> representativeCodeValidator.validate(null));
 
     assertThat(exception.getMessage()).isEqualTo(REP_CODE_NULL);
   }
@@ -32,7 +32,7 @@ class RepresentativeCodeValidatorTest {
   void testRepresentativeCodeCannotBeEmpty() {
     Exception exception =
         assertThrows(
-            VoteException.class, () -> representativeCodeValidator.validateRepresentativeCode(""));
+            VoteException.class, () -> representativeCodeValidator.validate(""));
 
     assertThat(exception.getMessage()).isEqualTo(REP_CODE_EMPTY);
   }

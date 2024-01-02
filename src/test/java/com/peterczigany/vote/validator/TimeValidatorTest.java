@@ -24,14 +24,14 @@ class TimeValidatorTest {
 
   @Test
   void testTimeCannotBeNull() {
-    Throwable exception = assertThrows(VoteException.class, () -> timeValidator.validateTime(null));
+    Throwable exception = assertThrows(VoteException.class, () -> timeValidator.validate(null));
 
     assertThat(exception.getMessage()).isEqualTo(TIME_NULL);
   }
 
   @Test
   void testTimeCannotBeEmpty() {
-    Throwable exception = assertThrows(VoteException.class, () -> timeValidator.validateTime(""));
+    Throwable exception = assertThrows(VoteException.class, () -> timeValidator.validate(""));
 
     assertThat(exception.getMessage()).isEqualTo(TIME_EMPTY);
   }
@@ -48,7 +48,7 @@ class TimeValidatorTest {
       })
   void testTimeIsNotValidISO8601String(String timeString) {
     Exception exception =
-        assertThrows(VoteException.class, () -> timeValidator.validateTime(timeString));
+        assertThrows(VoteException.class, () -> timeValidator.validate(timeString));
 
     assertThat(exception.getMessage()).isEqualTo(String.format(TIME_BAD_FORMAT, timeString));
   }
@@ -65,6 +65,6 @@ class TimeValidatorTest {
         "2023-12-23T14:30:45+01"
       })
   void testSuccessfulTimeStringValidation(String timeString) {
-    assertDoesNotThrow(() -> timeValidator.validateTime(timeString));
+    assertDoesNotThrow(() -> timeValidator.validate(timeString));
   }
 }

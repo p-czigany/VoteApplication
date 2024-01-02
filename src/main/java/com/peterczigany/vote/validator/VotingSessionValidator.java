@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.peterczigany.vote.VoteException;
+import java.util.Iterator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -48,24 +49,39 @@ public class VotingSessionValidator {
   public void validateVotingSession(String votingSessionJson) throws VoteException {
     try {
       JsonNode votingSessionNode = mapper.readTree(votingSessionJson);
-      timeValidator.validateTime(votingSessionNode.get(TIME_KEY).textValue());
-      subjectValidator.validateSubject(votingSessionNode.get(SUBJECT_KEY).textValue());
-      typeValidator.validateType(votingSessionNode.get(TYPE_KEY).textValue());
-      String chair = votingSessionNode.get(CHAIR_KEY).textValue();
-      repCodeValidator.validateRepresentativeCode(chair);
-      JsonNode votesNode = votingSessionNode.get(VOTES_KEY);
-      boolean didChairVote = false;
-      for (JsonNode voteNode : votesNode) {
-        if (chair.equals(voteNode.get(REP_CODE_KEY).textValue())) {
-          didChairVote = true;
-        }
-        voteValidator.validateVote(voteNode.toString());
-      }
-      if (!didChairVote) {
-        throw new VoteException(String.format(VOTING_SESSION_CHAIR_DID_NOT_VOTE, chair));
-      }
+
+      validateJsonStringField(votingSessionNode, TIME_KEY, timeValidator);
+      validateJsonStringField(votingSessionNode, SUBJECT_KEY, subjectValidator);
+      validateJsonStringField(votingSessionNode, TYPE_KEY, typeValidator);
+      validateJsonStringField(votingSessionNode, CHAIR_KEY, repCodeValidator);
+      validateChairVote(votingSessionNode);
+      validateVotes(votingSessionNode.get(VOTES_KEY));
+
     } catch (JsonProcessingException | NullPointerException e) {
       throw new VoteException(String.format(VOTING_SESSION_FORMAT_INVALID, votingSessionJson));
+    }
+  }
+
+  private void validateJsonStringField(JsonNode node, String key, Validator validator)
+      throws VoteException {
+    String value = node.get(key).textValue();
+    validator.validate(value);
+  }
+
+  private void validateChairVote(JsonNode votingSessionNode) throws VoteException {
+    String chair = votingSessionNode.get(CHAIR_KEY).textValue();
+    Iterator<JsonNode> voteNodes = votingSessionNode.get(VOTES_KEY).elements();
+    while (voteNodes.hasNext()) {
+      if (chair.equals(voteNodes.next().get(REP_CODE_KEY).textValue())) {
+        return;
+      }
+    }
+    throw new VoteException(String.format(VOTING_SESSION_CHAIR_DID_NOT_VOTE, chair));
+  }
+
+  private void validateVotes(JsonNode votesNode) throws VoteException {
+    for (JsonNode voteNode : votesNode) {
+      voteValidator.validateVote(voteNode.toString());
     }
   }
 }

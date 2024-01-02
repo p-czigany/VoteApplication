@@ -3,7 +3,7 @@ package com.peterczigany.vote.validator;
 import com.peterczigany.vote.VoteException;
 import java.util.List;
 
-public class TypeValidator {
+public class TypeValidator implements Validator {
 
   static final String TYPE_NULL = "A típus nem lehet null. Megadása kötelező.";
   static final String TYPE_EMPTY = "A típus nem lehet üres. Megadása kötelező.";
@@ -12,7 +12,7 @@ public class TypeValidator {
 
   private static final List<String> VOTE_TYPES = List.of("j", "e", "m");
 
-  public void validateType(String typeString) throws VoteException {
+  public void validate(String typeString) throws VoteException {
     if (typeString == null) {
       throw new VoteException(TYPE_NULL);
     }

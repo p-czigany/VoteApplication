@@ -21,7 +21,7 @@ class SubjectValidatorTest {
   @Test
   void testSubjectCannotBeNull() {
     Exception exception =
-        assertThrows(VoteException.class, () -> subjectValidator.validateSubject(null));
+        assertThrows(VoteException.class, () -> subjectValidator.validate(null));
 
     assertThat(exception.getMessage()).isEqualTo(SUBJECT_NULL);
   }
@@ -29,7 +29,7 @@ class SubjectValidatorTest {
   @Test
   void testSubjectCannotBeEmpty() {
     Exception exception =
-        assertThrows(VoteException.class, () -> subjectValidator.validateSubject(""));
+        assertThrows(VoteException.class, () -> subjectValidator.validate(""));
 
     assertThat(exception.getMessage()).isEqualTo(SUBJECT_EMPTY);
   }

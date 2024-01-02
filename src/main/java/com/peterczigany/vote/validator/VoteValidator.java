@@ -28,8 +28,8 @@ public class VoteValidator {
   public void validateVote(String voteJson) throws VoteException {
     try {
       Map<String, Object> voteMap = jsonParser.parseMap(voteJson);
-      repCodeValidator.validateRepresentativeCode((String) voteMap.get(REP_CODE_KEY));
-      voteValueValidator.validateVoteValue((String) voteMap.get(VOTE_VALUE_KEY));
+      repCodeValidator.validate((String) voteMap.get(REP_CODE_KEY));
+      voteValueValidator.validate((String) voteMap.get(VOTE_VALUE_KEY));
     } catch (JsonParseException | ClassCastException e) {
       throw new VoteException(String.format(VOTE_FORMAT_INVALID, voteJson));
     }
