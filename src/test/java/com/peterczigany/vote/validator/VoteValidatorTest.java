@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import com.peterczigany.vote.VoteException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.CsvFileSource;
 
 class VoteValidatorTest {
 
@@ -18,29 +18,13 @@ class VoteValidatorTest {
   }
 
   @ParameterizedTest
-  @ValueSource(strings = {"{ \"kepviselo\": \"Kepviselo1\", \"szavazat\": \"i\" }"})
+  @CsvFileSource(resources = "/validVotes.csv")
   void testValidVote(String voteString) {
     assertDoesNotThrow(() -> voteValidator.validateVote(voteString));
   }
 
   @ParameterizedTest
-  @ValueSource(
-      strings = {
-        "{ \"kepviselo\": \"Kepviselo1\", \"szavazat\": \"j\" }", // invalid vote value
-        "{ \"szavazat\": \"i\" }", // rep is missing
-        "{ \"kepviselo\": \"Kepviselo1\" }", // vote value is missing
-        "{ \"kepviselo\": \"\", \"szavazat\": \"i\" }", // rep is empty
-        "{ \"kepviselo\": \"Kepviselo1\", \"szavazat\": \"\" }", // vote value is empty
-        """
-              {
-                  "kepviselo":"Kepviselo3",
-                  "szavazat":{
-                      "kepviselo":"Kepviselo2",
-                      "szavazat":"n"
-                  }
-              }
-        """
-      })
+  @CsvFileSource(resources = "/invalidVotes.csv")
   void testInvalidVote(String voteString) {
     assertThrows(VoteException.class, () -> voteValidator.validateVote(voteString));
   }
