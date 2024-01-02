@@ -50,7 +50,7 @@ class TimeValidatorTest {
     Exception exception =
         assertThrows(VoteException.class, () -> timeValidator.validateTime(timeString));
 
-    assertThat(exception.getMessage()).isEqualTo(TIME_BAD_FORMAT);
+    assertThat(exception.getMessage()).isEqualTo(String.format(TIME_BAD_FORMAT, timeString));
   }
 
   @ParameterizedTest
