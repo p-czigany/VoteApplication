@@ -32,6 +32,7 @@ class VotingSessionValidatorTest {
   @ParameterizedTest
   @CsvFileSource(
       resources = {
+        "/invalidVotingSessions/badJson.csv",
         "/invalidVotingSessions/badTimeFormat.csv",
         "/invalidVotingSessions/blankField.csv",
         "/invalidVotingSessions/chairDidNotVote.csv",
