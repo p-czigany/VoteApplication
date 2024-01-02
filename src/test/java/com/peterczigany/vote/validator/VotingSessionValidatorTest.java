@@ -1,6 +1,5 @@
 package com.peterczigany.vote.validator;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -48,7 +47,7 @@ class VotingSessionValidatorTest {
   @ParameterizedTest
   @CsvFileSource(resources = "/invalidVotingSessions/chairDidNotVote.csv")
   void testChairDidNotVote(String votingSessionJson) {
-    VoteException voteException = assertThrows(
+    assertThrows(
         VoteException.class, () -> votingSessionValidator.validateVotingSession(votingSessionJson));
   }
 }
