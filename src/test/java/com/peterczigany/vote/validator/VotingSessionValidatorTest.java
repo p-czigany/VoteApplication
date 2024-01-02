@@ -50,4 +50,11 @@ class VotingSessionValidatorTest {
     assertThrows(
         VoteException.class, () -> votingSessionValidator.validateVotingSession(votingSessionJson));
   }
+
+  @ParameterizedTest
+  @CsvFileSource(resources = "/invalidVotingSessions/repHasMoreThanOneVotes.csv")
+  void testRepHasMoreThanOneVotes(String votingSessionJson) {
+    assertThrows(
+        VoteException.class, () -> votingSessionValidator.validateVotingSession(votingSessionJson));
+  }
 }
