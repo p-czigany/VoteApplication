@@ -1,5 +1,6 @@
 package com.peterczigany.vote.validator;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -35,13 +36,19 @@ class VotingSessionValidatorTest {
         "/invalidVotingSessions/badJson.csv",
         "/invalidVotingSessions/badTimeFormat.csv",
         "/invalidVotingSessions/blankField.csv",
-        "/invalidVotingSessions/chairDidNotVote.csv",
         "/invalidVotingSessions/invalidType.csv",
         "/invalidVotingSessions/invalidVoteValue.csv",
         "/invalidVotingSessions/missingField.csv"
       })
   void testInvalidVotingSession(String votingSessionJson) {
     assertThrows(
+        VoteException.class, () -> votingSessionValidator.validateVotingSession(votingSessionJson));
+  }
+
+  @ParameterizedTest
+  @CsvFileSource(resources = "/invalidVotingSessions/chairDidNotVote.csv")
+  void testChairDidNotVote(String votingSessionJson) {
+    VoteException voteException = assertThrows(
         VoteException.class, () -> votingSessionValidator.validateVotingSession(votingSessionJson));
   }
 }

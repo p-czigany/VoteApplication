@@ -9,7 +9,7 @@ import org.springframework.boot.json.JsonParser;
 
 public class VoteValidator {
 
-  private static final String REP_CODE_KEY = "kepviselo";
+  static final String REP_CODE_KEY = "kepviselo";
   private static final String VOTE_VALUE_KEY = "szavazat";
   private static final String VOTE_FORMAT_INVALID = "Az alábbi szavazat formája nem megfelelő: %s";
 
