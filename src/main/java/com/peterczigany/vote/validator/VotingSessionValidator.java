@@ -7,7 +7,9 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.peterczigany.vote.VoteException;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,8 @@ public class VotingSessionValidator {
   private static final String VOTING_SESSION_FORMAT_INVALID =
       "A szavazás formája nem megfelelő: %s";
   private static final String VOTING_SESSION_CHAIR_DID_NOT_VOTE = "Az elnök (%s) nem szavazott.";
+  private static final String VOTING_SESSION_REP_WITH_MULTIPLE_VOTES =
+      "Ennek a képviselőnek több szavazata van: %s";
 
   private final TimeValidator timeValidator;
   private final SubjectValidator subjectValidator;
@@ -80,8 +84,14 @@ public class VotingSessionValidator {
   }
 
   private void validateVotes(JsonNode votesNode) throws VoteException {
+    Set<String> representatives = new HashSet<>();
     for (JsonNode voteNode : votesNode) {
       voteValidator.validateVote(voteNode.toString());
+      String rep = voteNode.get(REP_CODE_KEY).textValue();
+      boolean duplication = !representatives.add(rep);
+      if (duplication) {
+        throw new VoteException(String.format(VOTING_SESSION_REP_WITH_MULTIPLE_VOTES, rep));
+      }
     }
   }
 }
