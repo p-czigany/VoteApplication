@@ -30,14 +30,34 @@ class VotingSessionPojoTest {
   }
 
   @Test
-  void testVotingSessionCreationIsUnsuccessful() {
-    Vote vote1 = new Vote("Kepviselo1", "i");
-    List<Vote> votes = List.of(vote1, new Vote("Kepviselo2", "n"), new Vote("Kepviselo3", "t"));
-
+  void testVotingSessionCreationWithInvalidTimeString() {
     assertThatThrownBy(
             () ->
                 new VotingSession(
-                    "2023-12-23 14:30:45Z", "Subject of Voting", "j", "Kepviselo1", votes))
+                    "2023-12-23 14:30:45",
+                    "Subject of Voting",
+                    "j",
+                    "Kepviselo1",
+                    List.of(
+                        new Vote("Kepviselo1", "i"),
+                        new Vote("Kepviselo2", "n"),
+                        new Vote("Kepviselo3", "t"))))
+        .isInstanceOf(Exception.class);
+  }
+
+  @Test
+  void testVotingSessionCreationWithoutChairVote() {
+    assertThatThrownBy(
+            () ->
+                new VotingSession(
+                    "2023-12-23 14:30:45Z",
+                    "Subject of Voting",
+                    "j",
+                    "Kepviselo0",
+                    List.of(
+                        new Vote("Kepviselo1", "i"),
+                        new Vote("Kepviselo2", "n"),
+                        new Vote("Kepviselo3", "t"))))
         .isInstanceOf(Exception.class);
   }
 }
