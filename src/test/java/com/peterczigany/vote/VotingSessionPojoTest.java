@@ -60,4 +60,68 @@ class VotingSessionPojoTest {
                         new Vote("Kepviselo3", "t"))))
         .isInstanceOf(Exception.class);
   }
+
+  @Test
+  void testVotingSessionCreationWithInvalidType() {
+    assertThatThrownBy(
+            () ->
+                new VotingSession(
+                    "2023-12-23 14:30:45Z",
+                    "Subject of Voting",
+                    "jelenléti (NOT VALID)",
+                    "Kepviselo1",
+                    List.of(
+                        new Vote("Kepviselo1", "i"),
+                        new Vote("Kepviselo2", "n"),
+                        new Vote("Kepviselo3", "t"))))
+        .isInstanceOf(Exception.class);
+  }
+
+  @Test
+  void testVotingSessionCreationWithInvalidVoteValue() {
+    assertThatThrownBy(
+            () ->
+                new VotingSession(
+                    "2023-12-23 14:30:45Z",
+                    "Subject of Voting",
+                    "j",
+                    "Kepviselo1",
+                    List.of(
+                        new Vote("Kepviselo1", "igen (NOT VALID)"),
+                        new Vote("Kepviselo2", "n"),
+                        new Vote("Kepviselo3", "t"))))
+        .isInstanceOf(Exception.class);
+  }
+
+  @Test
+  void testVotingSessionCreationWithEmptyField() {
+    assertThatThrownBy(
+            () ->
+                new VotingSession(
+                    "2023-12-23 14:30:45Z",
+                    "",
+                    "j",
+                    "Kepviselo1",
+                    List.of(
+                        new Vote("Kepviselo1", "i"),
+                        new Vote("Kepviselo2", "n"),
+                        new Vote("Kepviselo3", "t"))))
+        .isInstanceOf(Exception.class);
+  }
+
+  @Test
+  void testVotingSessionCreationWithNullField() {
+    assertThatThrownBy(
+            () ->
+                new VotingSession(
+                    "2023-12-23 14:30:45Z",
+                    null,
+                    "j",
+                    "Kepviselo1",
+                    List.of(
+                        new Vote("Kepviselo1", "i"),
+                        new Vote("Kepviselo2", "n"),
+                        new Vote("Kepviselo3", "t"))))
+        .isInstanceOf(Exception.class);
+  }
 }
