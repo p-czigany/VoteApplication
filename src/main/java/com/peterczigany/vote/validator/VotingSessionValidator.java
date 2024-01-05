@@ -6,7 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.json.JsonMapper;
-import com.peterczigany.vote.VoteException;
+import com.peterczigany.vote.exception.VoteException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;

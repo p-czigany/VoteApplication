@@ -1,6 +1,6 @@
 package com.peterczigany.vote.validator;
 
-import com.peterczigany.vote.VoteException;
+import com.peterczigany.vote.exception.VoteException;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.json.BasicJsonParser;

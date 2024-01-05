@@ -6,7 +6,7 @@ import static com.peterczigany.vote.validator.VoteValueValidator.VOTE_VALUE_NULL
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.peterczigany.vote.VoteException;
+import com.peterczigany.vote.exception.VoteException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;

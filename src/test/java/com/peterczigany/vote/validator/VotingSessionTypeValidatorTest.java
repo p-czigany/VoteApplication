@@ -6,13 +6,13 @@ import static com.peterczigany.vote.validator.TypeValidator.TYPE_NULL;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.peterczigany.vote.VoteException;
+import com.peterczigany.vote.exception.VoteException;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-class TypeValidatorTest {
+class VotingSessionTypeValidatorTest {
 
   private static TypeValidator typeValidator;
 
