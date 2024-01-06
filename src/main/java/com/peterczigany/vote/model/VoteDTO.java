@@ -1,5 +1,7 @@
 package com.peterczigany.vote.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public record VoteDTO(String representative, VoteValue voteValue) {
 
   public VoteDTO {
@@ -11,7 +13,9 @@ public record VoteDTO(String representative, VoteValue voteValue) {
     }
   }
 
-  public VoteDTO(String representative, String voteValue) {
+  public VoteDTO(
+      @JsonProperty("kepviselo") String representative,
+      @JsonProperty("szavazat") String voteValue) {
     this(representative, mapToVoteValue(voteValue));
   }
 

@@ -24,7 +24,7 @@ class VotingSessionValidatorTest {
   }
 
   @ParameterizedTest
-  @CsvFileSource(resources = "/validVotingSessions.csv")
+  @CsvFileSource(resources = {"/validVotingSession.csv", "/validVotingSessions.csv"})
   void testValidVotingSession(String votingSessionJson) {
     assertDoesNotThrow(() -> votingSessionValidator.validateVotingSession(votingSessionJson));
   }

@@ -3,6 +3,7 @@ package com.peterczigany.vote;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.peterczigany.vote.exception.VoteValidationException;
 import com.peterczigany.vote.model.VoteDTO;
 import com.peterczigany.vote.model.VoteValue;
 import com.peterczigany.vote.model.VotingSessionDTO;
@@ -19,22 +20,15 @@ class VotingSessionDTOTest {
 
   @Test
   void testVotingSessionCreationIsSuccessful() {
-    VoteDTO voteDTO1 = new VoteDTO("Kepviselo1", "i");
-    List<VoteDTO> voteDTOS = List.of(
-        voteDTO1, new VoteDTO("Kepviselo2", "n"), new VoteDTO("Kepviselo3", "t"));
-
-    VotingSessionDTO votingSessionDTO =
-        new VotingSessionDTO("2023-12-23 14:30:45Z", "Subject of Voting", "j", "Kepviselo1",
-            voteDTOS);
+    VotingSessionDTO votingSessionDTO = TestUtils.validVotingSessionDTO();
 
     assertThat(votingSessionDTO.time())
-        .isEqualTo(ZonedDateTime.of(2023, 12, 23, 14, 30, 45, 0, ZoneId.of("UTC")));
-    assertThat(votingSessionDTO.subject()).isEqualTo("Subject of Voting");
+        .isEqualTo(ZonedDateTime.of(2023, 9, 28, 11, 6, 25, 0, ZoneId.of("UTC")));
+    assertThat(votingSessionDTO.subject()).isEqualTo("Szavazás tárgya");
     assertThat(votingSessionDTO.votingSessionType()).isEqualTo(VotingSessionType.PRESENCE);
     assertThat(votingSessionDTO.chair()).isEqualTo("Kepviselo1");
-    assertThat(votingSessionDTO.voteDTOS().get(0)).isEqualTo(voteDTO1);
-    assertThat(votingSessionDTO.voteDTOS().get(1).representative()).isEqualTo("Kepviselo2");
-    assertThat(votingSessionDTO.voteDTOS().get(1).voteValue()).isEqualTo(VoteValue.AGAINST);
+    assertThat(votingSessionDTO.voteDTOs().get(1).representative()).isEqualTo("Kepviselo2");
+    assertThat(votingSessionDTO.voteDTOs().get(1).voteValue()).isEqualTo(VoteValue.AGAINST);
   }
 
   @ParameterizedTest

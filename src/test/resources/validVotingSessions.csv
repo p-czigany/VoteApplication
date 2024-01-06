@@ -1,24 +1,4 @@
 "{
-    ""idopont"": ""2023-09-28T11:06:25Z"",
-    ""targy"": ""Szavazás tárgya"",
-    ""tipus"": ""j"",
-    ""elnok"": ""Kepviselo1"",
-    ""szavazatok"": [
-        {
-            ""kepviselo"": ""Kepviselo1"",
-            ""szavazat"": ""i""
-        },
-        {
-            ""kepviselo"": ""Kepviselo2"",
-            ""szavazat"": ""n""
-        },
-        {
-            ""kepviselo"": ""Kepviselo3"",
-            ""szavazat"": ""t""
-        }
-    ]
-}",
-"{
     ""idopont"": ""2024-01-01T10:39:52-08:00[America/Los_Angeles]"",
     ""targy"": ""Szavazás tárgya"",
     ""tipus"": ""j"",

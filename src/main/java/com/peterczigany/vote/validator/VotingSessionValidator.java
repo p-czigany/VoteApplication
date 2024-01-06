@@ -13,7 +13,7 @@ import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 public class VotingSessionValidator {
 
   private static final String TIME_KEY = "idopont";

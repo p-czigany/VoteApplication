@@ -7,21 +7,36 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.time.ZonedDateTime;
 import java.util.List;
-import java.util.UUID;
+import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 public class VotingSession {
-  @Id @GeneratedValue private UUID id;
+  @Id
+  @GeneratedValue(generator = "shortUrlIdGenerator")
+  @GenericGenerator(name = "shortUrlIdGenerator", type = ShortUrlIdGenerator.class)
+  private String id;
+
   private ZonedDateTime time;
   private String subject;
   private VotingSessionType votingSessionType;
   private String chair;
 
   @OneToMany(mappedBy = "votingSession", cascade = CascadeType.ALL)
-  private final List<Vote> votes;
+  private List<Vote> votes;
+
+  public VotingSession() {}
 
   public VotingSession(
-      UUID id,
+      ZonedDateTime time,
+      String subject,
+      VotingSessionType votingSessionType,
+      String chair,
+      List<Vote> votes) {
+    this(null, time, subject, votingSessionType, chair, votes);
+  }
+
+  public VotingSession(
+      String id,
       ZonedDateTime time,
       String subject,
       VotingSessionType votingSessionType,
@@ -35,11 +50,11 @@ public class VotingSession {
     this.votes = votes;
   }
 
-  public UUID getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(UUID id) {
+  public void setId(String id) {
     this.id = id;
   }
 

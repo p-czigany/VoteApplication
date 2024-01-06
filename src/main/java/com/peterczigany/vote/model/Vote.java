@@ -12,7 +12,18 @@ public class Vote {
   @Id @GeneratedValue private UUID id;
   private String representative;
   private VoteValue voteValue;
-  @ManyToOne(fetch = FetchType.LAZY) private VotingSession votingSession;
+
+  @ManyToOne(fetch = FetchType.LAZY)
+  private VotingSession votingSession;
+
+  public Vote(String representative, String voteValueString) {
+    this(representative, VoteValue.valueOf(voteValueString));
+  }
+
+  public Vote(String representative, VoteValue voteValue) {
+    this.representative = representative;
+    this.voteValue = voteValue;
+  }
 
   public Vote(UUID id, String representative, VoteValue voteValue, VotingSession votingSession) {
     this.id = id;
