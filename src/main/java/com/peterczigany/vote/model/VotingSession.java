@@ -1,9 +1,9 @@
 package com.peterczigany.vote.model;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import java.time.ZonedDateTime;
 import java.util.List;
@@ -21,7 +21,8 @@ public class VotingSession {
   private VotingSessionType votingSessionType;
   private String chair;
 
-  @OneToMany(mappedBy = "votingSession", cascade = CascadeType.ALL)
+  @OneToMany
+  @JoinColumn(name = "voting_session_id")
   private List<Vote> votes;
 
   public VotingSession() {}
