@@ -2,12 +2,13 @@ package com.peterczigany.vote.repository;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.peterczigany.vote.model.Vote;
+import com.peterczigany.vote.TestUtils;
 import com.peterczigany.vote.model.VoteValue;
 import com.peterczigany.vote.model.VotingSession;
 import com.peterczigany.vote.model.VotingSessionType;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.List;
+import java.util.Optional;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -19,24 +20,24 @@ class VotingSessionEntityTest {
 
   @Test
   void testPersisting() {
-        Vote vote1 = new Vote(null, "Kepviselo1", VoteValue.FOR, null);
-        List<Vote> votes =
-            List.of(
-                vote1,
-                new Vote(null, "Kepviselo2", VoteValue.AGAINST, null),
-                new Vote(null, "Kepviselo3", VoteValue.ABSTAIN, null));
-    VotingSession votingSession =
-        new VotingSession(
-            null,
-            ZonedDateTime.parse("2023-12-23T14:30:45Z"),
-            "Subject of Voting",
-            VotingSessionType.PRESENCE,
-            "Kepviselo1",
-            votes);
+    VotingSession votingSession1 = TestUtils.validVotingSession();
+    VotingSession votingSession2 = TestUtils.validVotingSession();
+    votingSession2.setTime(ZonedDateTime.of(2024, 1, 1, 1, 1, 1, 0, ZoneId.of("UTC")));
+    votingSession2.setVotingSessionType(VotingSessionType.MAJORITY);
 
-    VotingSession savedVotingSession = repository.save(votingSession);
+    VotingSession saved1 = repository.save(votingSession1);
+    VotingSession saved2 = repository.save(votingSession2);
+    Optional<VotingSession> retrieved1 = repository.findById(saved1.getId());
 
-    assertThat(savedVotingSession.getChair()).isEqualTo("Kepviselo1");
-    assertThat(savedVotingSession.getVotes()).hasSize(3);
+    assertThat(saved1.getChair()).isEqualTo("Kepviselo1");
+    assertThat(saved1.getVotes()).hasSize(3);
+    assertThat(saved1.getVotingSessionType()).isEqualTo(VotingSessionType.PRESENCE);
+    assertThat(retrieved1.isPresent()).isTrue();
+    assertThat(retrieved1.get().getVotes()).hasSize(3);
+
+    assertThat(repository.findById(saved2.getId()).isPresent()).isTrue();
+    assertThat(repository.findById(saved2.getId()).get().getVotes()).hasSize(3);
+    assertThat(repository.findById(saved2.getId()).get().getVotes().get(0).getVoteValue())
+        .isEqualTo(VoteValue.FOR);
   }
 }
