@@ -16,8 +16,8 @@ class VotingSessionPojoTest {
     VotingSession votingSession = TestUtils.validVotingSession();
 
     assertThat(votingSession.getTime())
-        .isEqualTo(ZonedDateTime.of(2023, 12, 23, 14, 30, 45, 0, ZoneId.of("UTC")));
-    assertThat(votingSession.getSubject()).isEqualTo("Subject of Voting");
+        .isEqualTo(ZonedDateTime.of(2023, 9, 28, 11, 6, 25, 0, ZoneId.of("UTC")));
+    assertThat(votingSession.getSubject()).isEqualTo("Szavazás tárgya");
     assertThat(votingSession.getVotingSessionType()).isEqualTo(VotingSessionType.PRESENCE);
     assertThat(votingSession.getChair()).isEqualTo("Kepviselo1");
     assertThat(votingSession.getVotes().get(1).getRepresentative()).isEqualTo("Kepviselo2");
