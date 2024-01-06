@@ -17,7 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
 @WebMvcTest(VotingSessionController.class)
-public class VotingSessionControllerTest {
+class VotingSessionControllerTest {
 
   @MockBean private VotingSessionController controller;
 
