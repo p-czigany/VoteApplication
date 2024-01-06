@@ -12,8 +12,14 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class VotingSessionService {
-  @Autowired private VotingSessionRepository repository;
-  @Autowired private VotingSessionMapper mapper;
+  private final VotingSessionRepository repository;
+  private final VotingSessionMapper mapper;
+
+  @Autowired
+  public VotingSessionService(VotingSessionRepository repository, VotingSessionMapper mapper) {
+    this.repository = repository;
+    this.mapper = mapper;
+  }
 
   public CreationResponse createVotingSession(VotingSessionDTO dto) throws VoteException {
     validateTime(dto.time());
