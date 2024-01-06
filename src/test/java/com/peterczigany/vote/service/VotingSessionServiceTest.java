@@ -1,51 +1,48 @@
 package com.peterczigany.vote.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
+import com.peterczigany.vote.TestUtils;
 import com.peterczigany.vote.exception.VoteException;
-import com.peterczigany.vote.model.Vote;
-import com.peterczigany.vote.model.VoteDTO;
 import com.peterczigany.vote.model.VotingSession;
 import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.repository.VotingSessionRepository;
 import com.peterczigany.vote.response.CreationResponse;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.List;
-
+@ExtendWith(MockitoExtension.class)
 class VotingSessionServiceTest {
-  @MockBean private VotingSessionRepository repository;
-
-  @MockBean private VotingSessionMapper mapper;
-
-  @Autowired private VotingSessionService service;
+  @Mock private VotingSessionRepository repository;
+  @Mock private VotingSessionMapper mapper;
+  @InjectMocks private VotingSessionService service;
 
   @Test
   void testSuccessfullyCreateVotingSession() throws VoteException {
-      // votingSessionDTO
-      VoteDTO voteDTO1 = new VoteDTO("Kepviselo1", "i");
-      List<VoteDTO> voteDTOs = List.of(
-              voteDTO1, new VoteDTO("Kepviselo2", "n"), new VoteDTO("Kepviselo3", "t"));
-      VotingSessionDTO dto =
-              new VotingSessionDTO("2023-12-23 14:30:45Z", "Subject of Voting", "j", "Kepviselo1",
-                      voteDTOs);
-      Vote vote1 = new Vote("Kepviselo1", "i");
-      // votingSessionEntity
-      List<Vote> votes = List.of(
-              vote1, new Vote("Kepviselo2", "n"), new Vote("Kepviselo3", "t"));
-      VotingSession votingSession = new VotingSession(dto.time(), dto.subject(), dto.votingSessionType(), dto.chair(), votes);
+    VotingSessionDTO dto = TestUtils.validVotingSessionDTO();
+    VotingSession votingSession = TestUtils.validVotingSession();
+    Mockito.when(mapper.mapToEntity(dto)).thenReturn(votingSession);
 
-      votingSession.setId("ABC123");
-      VotingSession expectation = votingSession;
-      Mockito.when(repository.save(votingSession)).thenReturn(expectation);
+    votingSession.setId("ABC123");
+    CreationResponse expectation = new CreationResponse(votingSession.getId());
+    Mockito.when(repository.existsByTime(votingSession.getTime())).thenReturn(false);
+    Mockito.when(repository.save(votingSession)).thenReturn(votingSession);
 
-      assertThat(service.createVotingSession(dto)).isEqualTo(expectation);
+    assertThat(service.createVotingSession(dto)).isEqualTo(expectation);
   }
 
   @Test
-  void testFailToCreateVotingSessionBecauseTimeIsDuplicated() {}
+  void testFailToCreateVotingSessionBecauseTimeIsDuplicated() {
+    VotingSessionDTO dto = TestUtils.validVotingSessionDTO();
+    VotingSession votingSession = TestUtils.validVotingSession();
+
+    Mockito.when(repository.existsByTime(votingSession.getTime())).thenReturn(true);
+
+    assertThatThrownBy(() -> service.createVotingSession(dto)).isInstanceOf(Exception.class);
+  }
 }
