@@ -1,6 +1,7 @@
 package com.peterczigany.vote.controller;
 
 import com.peterczigany.vote.exception.VoteException;
+import com.peterczigany.vote.exception.VoteNotFoundException;
 import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.response.CreationResponse;
 import com.peterczigany.vote.response.VoteResponse;
@@ -44,7 +45,12 @@ public class VotingSessionController {
   @ResponseStatus(HttpStatus.OK)
   public VoteResponse getIndividualVote(
       @RequestParam("szavazas") String votingSessionId,
-      @RequestParam("kepviselo") String representative) {
+      @RequestParam("kepviselo") String representative)
+      throws VoteNotFoundException {
     return service.getIndividualVote(votingSessionId, representative);
   }
+
+  @ExceptionHandler({VoteNotFoundException.class})
+  @ResponseStatus(HttpStatus.NOT_FOUND)
+  public void handleNotFoundException() {}
 }

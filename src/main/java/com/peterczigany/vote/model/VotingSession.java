@@ -1,10 +1,7 @@
 package com.peterczigany.vote.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
+
 import java.time.ZonedDateTime;
 import java.util.List;
 import org.hibernate.annotations.GenericGenerator;
@@ -21,7 +18,7 @@ public class VotingSession {
   private VotingSessionType votingSessionType;
   private String chair;
 
-  @OneToMany
+  @OneToMany(fetch = FetchType.EAGER)
   @JoinColumn(name = "voting_session_id")
   private List<Vote> votes;
 

@@ -4,6 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.peterczigany.vote.model.Vote;
 import com.peterczigany.vote.model.VotingSession;
 import com.peterczigany.vote.repository.VotingSessionRepository;
 import org.junit.jupiter.api.AfterEach;
@@ -15,6 +16,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.List;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -93,6 +96,12 @@ class VoteApplicationIntegrationTest {
   @Test
   void testGetVoteBySessionIdAndRepresentative() throws Exception {
     VotingSession votingSession = repository.save(TestUtils.validVotingSession());
+    System.out.println("ID: " + votingSession.getId());
+    votingSession.getVotes().forEach(v -> System.out.println(v.getRepresentative() + "\t" + v.getVoteValue().label));
+
+    List<Vote> votes = repository.findById(votingSession.getId()).get().getVotes();
+    votes.forEach(v -> System.out.println(v.getRepresentative() + "\t" + v.getVoteValue().label));
+
     mockMvc
         .perform(
             get("http://localhost:8080/szavazasok/szavazas")

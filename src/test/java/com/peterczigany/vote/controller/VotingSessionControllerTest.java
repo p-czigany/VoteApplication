@@ -6,6 +6,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.peterczigany.vote.TestUtils;
 import com.peterczigany.vote.exception.TimeDuplicationException;
+import com.peterczigany.vote.exception.VoteNotFoundException;
 import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.response.CreationResponse;
 import com.peterczigany.vote.response.VoteResponse;
@@ -92,7 +93,7 @@ class VotingSessionControllerTest {
   @Test
   void testFailToGetVoteBySessionIdAndRepresentative() throws Exception {
     Mockito.when(controller.getIndividualVote("ABC123", "Kepviselo1"))
-        .thenThrow(NotFoundException.class);
+        .thenThrow(VoteNotFoundException.class);
 
     mockMvc
         .perform(
