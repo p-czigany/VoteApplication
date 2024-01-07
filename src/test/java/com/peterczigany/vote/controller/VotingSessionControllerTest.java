@@ -17,7 +17,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -101,5 +100,32 @@ class VotingSessionControllerTest {
                 .param("szavazas", "ABC123")
                 .param("kepviselo", "Kepviselo1"))
         .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void testFailToGetVotingSessionResult() throws Exception {
+    Mockito.when(controller.getVotingSessionResult("ABC123"))
+        .thenThrow(VotingSessionNotFoundException.class);
+
+    mockMvc
+        .perform(get("http://localhost:8080/szavazasok/eredmeny").param("szavazas", "ABC123"))
+        .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void testSuccessfulGetVotingSessionResult() throws Exception {
+
+    Mockito.when(controller.getVotingSessionResult("ABC123"))
+        .thenReturn(new VotingSessionResultResponse(ResultValue.ACCEPTED, 150, 120, 30, 0));
+
+    mockMvc
+        .perform(get("http://localhost:8080/szavazasok/eredmeny").param("szavazas", "ABC123"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("eredmeny").value("F"))
+        .andExpect(jsonPath("kepviselokSzama").value(150))
+        .andExpect(jsonPath("igenekSzama").value(120))
+        .andExpect(jsonPath("nemekSzama").value(30))
+        .andExpect(jsonPath("tartozkodasokSzama").value(0));
   }
 }
