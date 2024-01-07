@@ -4,7 +4,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
+import com.peterczigany.vote.model.VoteValue;
 import com.peterczigany.vote.model.VotingSession;
+import com.peterczigany.vote.model.VotingSessionType;
 import com.peterczigany.vote.repository.VotingSessionRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -93,10 +95,6 @@ class VoteApplicationIntegrationTest {
   @Test
   void testGetVoteBySessionIdAndRepresentative() throws Exception {
     VotingSession votingSession = repository.save(TestUtils.validVotingSession());
-    System.out.println("ID: " + votingSession.getId());
-    votingSession
-        .getVotes()
-        .forEach(v -> System.out.println(v.getRepresentative() + "\t" + v.getVoteValue().label));
 
     mockMvc
         .perform(
@@ -123,5 +121,27 @@ class VoteApplicationIntegrationTest {
                 .param("szavazas", votingSession.getId())
                 .param("kepviselo", "Kepviselo9"))
         .andExpect(status().isNotFound());
+  }
+
+  @Test
+  void testGetVotingSessionResultById() throws Exception {
+    mockMvc
+        .perform(get("http://localhost:8080/szavazasok/eredmeny").param("szavazas", "ABC123"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("eredmeny").value("F"));
+
+    repository.save(TestUtils.validVotingSession());
+    VotingSession votingSession = TestUtils.validVotingSession();
+    votingSession.setTime(votingSession.getTime().plusMinutes(1));
+    votingSession.setVotingSessionType(VotingSessionType.MAJORITY);
+    votingSession.getVotes().get(2).setVoteValue(VoteValue.FOR);
+    String id = repository.save(votingSession).getId();
+
+    mockMvc
+        .perform(get("http://localhost:8080/szavazasok/eredmeny").param("szavazas", id))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("eredmeny").value("F"));
   }
 }
