@@ -7,9 +7,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.peterczigany.vote.TestUtils;
 import com.peterczigany.vote.exception.TimeDuplicationException;
 import com.peterczigany.vote.exception.VoteNotFoundException;
+import com.peterczigany.vote.exception.VotingSessionNotFoundException;
 import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.response.CreationResponse;
 import com.peterczigany.vote.response.VoteResponse;
+import com.peterczigany.vote.response.VotingSessionResultResponse;
+import com.peterczigany.vote.response.VotingSessionResultResponse.ResultValue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;

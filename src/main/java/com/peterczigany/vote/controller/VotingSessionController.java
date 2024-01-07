@@ -5,6 +5,7 @@ import com.peterczigany.vote.exception.VoteNotFoundException;
 import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.response.CreationResponse;
 import com.peterczigany.vote.response.VoteResponse;
+import com.peterczigany.vote.response.VotingSessionResultResponse;
 import com.peterczigany.vote.service.VotingSessionService;
 import java.time.format.DateTimeParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,4 +54,11 @@ public class VotingSessionController {
   @ExceptionHandler({VoteNotFoundException.class})
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public void handleNotFoundException() {}
+
+  @GetMapping(value = "/szavazasok/eredmeny")
+  @ResponseStatus(HttpStatus.OK)
+  public VotingSessionResultResponse getVotingSessionResult(
+      @RequestParam("szavazas") String votingSessionId) {
+    return null;
+  }
 }
