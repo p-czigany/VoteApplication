@@ -1,8 +1,8 @@
 package com.peterczigany.vote.model;
 
 import jakarta.persistence.*;
-
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -18,9 +18,8 @@ public class VotingSession {
   private VotingSessionType votingSessionType;
   private String chair;
 
-  @OneToMany(fetch = FetchType.EAGER)
-  @JoinColumn(name = "voting_session_id")
-  private List<Vote> votes;
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+  private List<Vote> votes = new ArrayList<>();
 
   public VotingSession() {}
 

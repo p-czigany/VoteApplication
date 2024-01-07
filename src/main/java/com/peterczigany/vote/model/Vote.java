@@ -11,13 +11,14 @@ public class Vote {
   private String representative;
   private VoteValue voteValue;
 
+  public Vote() {}
+
   public Vote(String representative, String voteValueString) {
     this(representative, VoteValue.valueOf(voteValueString));
   }
 
   public Vote(String representative, VoteValue voteValue) {
-    this.representative = representative;
-    this.voteValue = voteValue;
+    this(null, representative, voteValue);
   }
 
   public Vote(UUID id, String representative, VoteValue voteValue) {
