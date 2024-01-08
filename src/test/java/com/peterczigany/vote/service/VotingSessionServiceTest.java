@@ -101,8 +101,29 @@ class VotingSessionServiceTest {
   }
 
   @Test
-  @Disabled
-  void testGetVotingSessionResult_whenTypeIsSupermajority() {}
+  void testGetVotingSessionResultReject_whenTypeIsSupermajority()
+      throws VotingSessionNotFoundException {
+    String votingSessionId = "ABC123";
+    VotingSessionResultResponse expectedResponse =
+        new VotingSessionResultResponse(ResultValue.REJECTED, 3, 1, 1, 1);
+    when(repository.findById(anyString())).thenReturn(Optional.of(TestUtils.validVotingSession()));
+
+    VotingSessionResultResponse actualResponse = service.getVotingSessionResult(votingSessionId);
+
+    assertThat(actualResponse).isEqualTo(expectedResponse);
+  }
+
+  @Test
+  void testGetVotingSessionResultAccept_whenTypeIsSupermajority()
+      throws VotingSessionNotFoundException {
+    String votingSessionId = "ABC123";
+    VotingSessionResultResponse expectedResponse =
+        new VotingSessionResultResponse(ResultValue.ACCEPTED, 103, 101, 1, 1);
+    when(repository.findById(anyString()))
+        .thenReturn(Optional.of(TestUtils.supermajorityVotingSession()));
+
+    assertThat(service.getVotingSessionResult(votingSessionId)).isEqualTo(expectedResponse);
+  }
 
   @Test
   @Disabled
