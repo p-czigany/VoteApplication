@@ -5,8 +5,10 @@ import com.peterczigany.vote.exception.VoteException;
 import com.peterczigany.vote.exception.VoteNotFoundException;
 import com.peterczigany.vote.exception.VotingSessionNotFoundException;
 import com.peterczigany.vote.model.Vote;
+import com.peterczigany.vote.model.VoteValue;
 import com.peterczigany.vote.model.VotingSession;
 import com.peterczigany.vote.model.VotingSessionDTO;
+import com.peterczigany.vote.model.VotingSessionType;
 import com.peterczigany.vote.repository.VotingSessionRepository;
 import com.peterczigany.vote.response.CreationResponse;
 import com.peterczigany.vote.response.VoteResponse;
@@ -62,6 +64,23 @@ public class VotingSessionService {
     if (votingSession.isEmpty()) {
       throw new VotingSessionNotFoundException("Nem található ilyen szavazás");
     }
-    return new VotingSessionResultResponse(ResultValue.ACCEPTED, 1, 1, 1,1);
+    if (votingSession.get().getVotingSessionType().equals(VotingSessionType.PRESENCE)) {
+      return new VotingSessionResultResponse(
+          ResultValue.ACCEPTED,
+          votingSession.get().getVotes().size(),
+          (int)
+              votingSession.get().getVotes().stream()
+                  .filter(vote -> vote.getVoteValue().equals(VoteValue.FOR))
+                  .count(),
+          (int)
+              votingSession.get().getVotes().stream()
+                  .filter(vote -> vote.getVoteValue().equals(VoteValue.AGAINST))
+                  .count(),
+          (int)
+              votingSession.get().getVotes().stream()
+                  .filter(vote -> vote.getVoteValue().equals(VoteValue.AGAINST))
+                  .count());
+    }
+    return new VotingSessionResultResponse(ResultValue.ACCEPTED, 1, 1, 1, 1);
   }
 }
