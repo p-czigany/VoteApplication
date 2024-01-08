@@ -3,12 +3,15 @@ package com.peterczigany.vote.service;
 import com.peterczigany.vote.exception.TimeDuplicationException;
 import com.peterczigany.vote.exception.VoteException;
 import com.peterczigany.vote.exception.VoteNotFoundException;
+import com.peterczigany.vote.exception.VotingSessionNotFoundException;
 import com.peterczigany.vote.model.Vote;
 import com.peterczigany.vote.model.VotingSession;
 import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.repository.VotingSessionRepository;
 import com.peterczigany.vote.response.CreationResponse;
 import com.peterczigany.vote.response.VoteResponse;
+import com.peterczigany.vote.response.VotingSessionResultResponse;
+import com.peterczigany.vote.response.VotingSessionResultResponse.ResultValue;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,5 +54,14 @@ public class VotingSessionService {
       }
     }
     throw new VoteNotFoundException("Nem található ilyen szavazat.");
+  }
+
+  public VotingSessionResultResponse getVotingSessionResult(String votingSessionId)
+      throws VotingSessionNotFoundException {
+    Optional<VotingSession> votingSession = repository.findById(votingSessionId);
+    if (votingSession.isEmpty()) {
+      throw new VotingSessionNotFoundException("Nem található ilyen szavazás");
+    }
+    return new VotingSessionResultResponse(ResultValue.ACCEPTED, 1, 1, 1,1);
   }
 }

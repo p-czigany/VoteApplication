@@ -2,6 +2,7 @@ package com.peterczigany.vote.controller;
 
 import com.peterczigany.vote.exception.VoteException;
 import com.peterczigany.vote.exception.VoteNotFoundException;
+import com.peterczigany.vote.exception.VotingSessionNotFoundException;
 import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.response.CreationResponse;
 import com.peterczigany.vote.response.VoteResponse;
@@ -58,7 +59,7 @@ public class VotingSessionController {
   @GetMapping(value = "/szavazasok/eredmeny")
   @ResponseStatus(HttpStatus.OK)
   public VotingSessionResultResponse getVotingSessionResult(
-      @RequestParam("szavazas") String votingSessionId) {
-    return null;
+      @RequestParam("szavazas") String votingSessionId) throws VotingSessionNotFoundException {
+    return service.getVotingSessionResult(votingSessionId);
   }
 }

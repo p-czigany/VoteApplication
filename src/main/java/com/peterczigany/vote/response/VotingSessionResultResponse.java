@@ -21,11 +21,11 @@ public record VotingSessionResultResponse(
     }
   }
 
-  private static ResultValue mapToResult(String resultString) {
-    return switch (resultString) {
-      case "F" -> ResultValue.ACCEPTED;
-      case "U" -> ResultValue.REJECTED;
-      default -> throw new IllegalArgumentException();
-    };
-  }
+  //  private static ResultValue mapToResult(String resultString) {
+  //    return switch (resultString) {
+  //      case "F" -> ResultValue.ACCEPTED;
+  //      case "U" -> ResultValue.REJECTED;
+  //      default -> throw new IllegalArgumentException();
+  //    };
+  //  }
 }
