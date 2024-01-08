@@ -47,6 +47,14 @@ public class VotingSession {
     this.votes = votes;
   }
 
+  public long countTotalVotes() {
+    return votes.size();
+  }
+
+  public long countVotes(VoteValue voteValue) {
+    return votes.stream().filter(vote -> vote.getVoteValue().equals(voteValue)).count();
+  }
+
   public String getId() {
     return id;
   }

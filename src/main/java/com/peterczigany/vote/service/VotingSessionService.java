@@ -60,27 +60,24 @@ public class VotingSessionService {
 
   public VotingSessionResultResponse getVotingSessionResult(String votingSessionId)
       throws VotingSessionNotFoundException {
-    Optional<VotingSession> votingSession = repository.findById(votingSessionId);
-    if (votingSession.isEmpty()) {
-      throw new VotingSessionNotFoundException("Nem található ilyen szavazás");
+    VotingSession votingSession =
+        repository
+            .findById(votingSessionId)
+            .orElseThrow(() -> new VotingSessionNotFoundException("Nem található ilyen szavazás"));
+
+    if (votingSession.getVotingSessionType().equals(VotingSessionType.PRESENCE)) {
+      return createResultResponse(ResultValue.ACCEPTED, votingSession);
     }
-    if (votingSession.get().getVotingSessionType().equals(VotingSessionType.PRESENCE)) {
-      return new VotingSessionResultResponse(
-          ResultValue.ACCEPTED,
-          votingSession.get().getVotes().size(),
-          (int)
-              votingSession.get().getVotes().stream()
-                  .filter(vote -> vote.getVoteValue().equals(VoteValue.FOR))
-                  .count(),
-          (int)
-              votingSession.get().getVotes().stream()
-                  .filter(vote -> vote.getVoteValue().equals(VoteValue.AGAINST))
-                  .count(),
-          (int)
-              votingSession.get().getVotes().stream()
-                  .filter(vote -> vote.getVoteValue().equals(VoteValue.AGAINST))
-                  .count());
-    }
-    return new VotingSessionResultResponse(ResultValue.ACCEPTED, 1, 1, 1, 1);
+    return null;
+  }
+
+  private VotingSessionResultResponse createResultResponse(
+      ResultValue resultValue, VotingSession votingSession) {
+    return new VotingSessionResultResponse(
+        resultValue,
+        votingSession.countTotalVotes(),
+        votingSession.countVotes(VoteValue.FOR),
+        votingSession.countVotes(VoteValue.AGAINST),
+        votingSession.countVotes(VoteValue.ABSTAIN));
   }
 }

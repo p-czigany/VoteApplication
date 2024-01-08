@@ -22,5 +22,9 @@ class VotingSessionPojoTest {
     assertThat(votingSession.getChair()).isEqualTo("Kepviselo1");
     assertThat(votingSession.getVotes().get(1).getRepresentative()).isEqualTo("Kepviselo2");
     assertThat(votingSession.getVotes().get(1).getVoteValue()).isEqualTo(VoteValue.AGAINST);
+    assertThat(votingSession.countTotalVotes()).isEqualTo(3);
+    assertThat(votingSession.countVotes(VoteValue.FOR)).isEqualTo(1);
+    assertThat(votingSession.countVotes(VoteValue.AGAINST)).isEqualTo(1);
+    assertThat(votingSession.countVotes(VoteValue.ABSTAIN)).isEqualTo(1);
   }
 }

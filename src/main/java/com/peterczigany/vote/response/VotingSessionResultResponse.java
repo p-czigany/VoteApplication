@@ -5,10 +5,10 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 public record VotingSessionResultResponse(
     @JsonProperty("eredmeny") ResultValue result,
-    @JsonProperty("kepviselokSzama") int numberOfRepresentatives,
-    @JsonProperty("igenekSzama") int voteCountFor,
-    @JsonProperty("nemekSzama") int voteCountAgainst,
-    @JsonProperty("tartozkodasokSzama") int voteCountAbstaining) {
+    @JsonProperty("kepviselokSzama") long numberOfRepresentatives,
+    @JsonProperty("igenekSzama") long voteCountFor,
+    @JsonProperty("nemekSzama") long voteCountAgainst,
+    @JsonProperty("tartozkodasokSzama") long voteCountAbstaining) {
 
   public enum ResultValue {
     ACCEPTED("F"),
@@ -20,12 +20,4 @@ public record VotingSessionResultResponse(
       this.label = label;
     }
   }
-
-  //  private static ResultValue mapToResult(String resultString) {
-  //    return switch (resultString) {
-  //      case "F" -> ResultValue.ACCEPTED;
-  //      case "U" -> ResultValue.REJECTED;
-  //      default -> throw new IllegalArgumentException();
-  //    };
-  //  }
 }
