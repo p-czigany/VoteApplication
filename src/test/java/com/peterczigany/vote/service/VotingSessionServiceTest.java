@@ -7,6 +7,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 
 import com.peterczigany.vote.TestUtils;
+import com.peterczigany.vote.exception.PriorPresenceVotingNotFoundException;
 import com.peterczigany.vote.exception.VoteException;
 import com.peterczigany.vote.exception.VoteNotFoundException;
 import com.peterczigany.vote.exception.VotingSessionNotFoundException;
@@ -18,8 +19,8 @@ import com.peterczigany.vote.response.CreationResponse;
 import com.peterczigany.vote.response.VoteResponse;
 import com.peterczigany.vote.response.VotingSessionResultResponse;
 import com.peterczigany.vote.response.VotingSessionResultResponse.ResultValue;
+import java.time.ZonedDateTime;
 import java.util.Optional;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -129,6 +130,41 @@ class VotingSessionServiceTest {
   }
 
   @Test
-  @Disabled
-  void testGetVotingSessionResult_whenTypeIsMajority() {}
+  void testGetVotingSessionResultAccept_whenTypeIsMajority() throws VotingSessionNotFoundException {
+    String votingSessionId = "ABC123";
+    VotingSessionResultResponse expectedResponse =
+        new VotingSessionResultResponse(ResultValue.ACCEPTED, 10, 6, 2, 2);
+
+    when(repository.findById(anyString()))
+        .thenReturn(Optional.of(TestUtils.majorityVotingSession(6, 2, 2)));
+    when(repository.findLatestPresenceVotingSessionBefore(any(ZonedDateTime.class)))
+        .thenReturn(Optional.of(TestUtils.sessionWithXPresent(10)));
+
+    assertThat(service.getVotingSessionResult(votingSessionId)).isEqualTo(expectedResponse);
+  }
+
+  @Test
+  void testGetVotingSessionResultReject_whenTypeIsMajority() throws VotingSessionNotFoundException {
+    String votingSessionId = "ABC123";
+    VotingSessionResultResponse expectedResponse =
+        new VotingSessionResultResponse(ResultValue.REJECTED, 10, 6, 2, 2);
+
+    when(repository.findById(anyString()))
+        .thenReturn(Optional.of(TestUtils.majorityVotingSession(6, 2, 2)));
+    when(repository.findLatestPresenceVotingSessionBefore(any(ZonedDateTime.class)))
+        .thenReturn(Optional.of(TestUtils.sessionWithXPresent(12)));
+
+    assertThat(service.getVotingSessionResult(votingSessionId)).isEqualTo(expectedResponse);
+  }
+
+  @Test
+  void testGetVotingSessionResultFail_whenTypeIsMajorityAndNoPreviousPresence() {
+    when(repository.findById(anyString()))
+        .thenReturn(Optional.of(TestUtils.majorityVotingSession(6, 2, 2)));
+    when(repository.findLatestPresenceVotingSessionBefore(any(ZonedDateTime.class)))
+        .thenReturn(Optional.empty());
+
+    assertThatThrownBy(() -> service.getVotingSessionResult("ABC123"))
+        .isInstanceOf(PriorPresenceVotingNotFoundException.class);
+  }
 }
