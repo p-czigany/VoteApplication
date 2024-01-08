@@ -15,6 +15,8 @@ import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.repository.VotingSessionRepository;
 import com.peterczigany.vote.response.CreationResponse;
 import com.peterczigany.vote.response.VoteResponse;
+import com.peterczigany.vote.response.VotingSessionResultResponse;
+import com.peterczigany.vote.response.VotingSessionResultResponse.ResultValue;
 import java.util.Optional;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -86,21 +88,17 @@ class VotingSessionServiceTest {
         .isInstanceOf(VotingSessionNotFoundException.class);
   }
 
-  //  @Test
-  //  @Disabled
-  //  void testGetVotingSessionResult_whenTypeIsPresence() {
-  //    String votingSessionId = "ABC123";
-  //    VotingSessionResultResponse expectedResponse = new VotingSessionResultResponse(/* provide
-  // the necessary arguments */);
-  //
-  // when(repository.findById(anyString())).thenReturn(Optional.of(TestUtils.validVotingSession()));
-  //    when(mapper.mapToResponse(any(VotingSession.class))).thenReturn(expectedResponse);
-  //
-  //    VotingSessionResultResponse actualResponse =
-  // service.getVotingSessionResult(votingSessionId);
-  //
-  //    assertThat(actualResponse).isEqualTo(expectedResponse);
-  //  }
+  @Test
+  void testGetVotingSessionResult_whenTypeIsPresence() throws VotingSessionNotFoundException {
+    String votingSessionId = "ABC123";
+    VotingSessionResultResponse expectedResponse =
+        new VotingSessionResultResponse(ResultValue.ACCEPTED, 3, 1, 1, 1);
+    when(repository.findById(anyString())).thenReturn(Optional.of(TestUtils.validVotingSession()));
+
+    VotingSessionResultResponse actualResponse = service.getVotingSessionResult(votingSessionId);
+
+    assertThat(actualResponse).isEqualTo(expectedResponse);
+  }
 
   @Test
   @Disabled
