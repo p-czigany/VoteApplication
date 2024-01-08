@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class VotingSessionService {
+
+  private static final int TOTAL_NUMBER_OF_MEMBERS_OF_PARLIAMENT = 200;
   private final VotingSessionRepository repository;
   private final VotingSessionMapper mapper;
 
@@ -68,7 +70,17 @@ public class VotingSessionService {
     if (votingSession.getVotingSessionType().equals(VotingSessionType.PRESENCE)) {
       return createResultResponse(ResultValue.ACCEPTED, votingSession);
     }
+    if (votingSession.getVotingSessionType().equals(VotingSessionType.SUPERMAJORITY)) {
+      return superMajorityResult(votingSession);
+    }
     return null;
+  }
+
+  private VotingSessionResultResponse superMajorityResult(VotingSession votingSession) {
+    if ((votingSession.countVotes(VoteValue.FOR) * 2) > TOTAL_NUMBER_OF_MEMBERS_OF_PARLIAMENT) {
+      return createResultResponse(ResultValue.ACCEPTED, votingSession);
+    }
+    return createResultResponse(ResultValue.REJECTED, votingSession);
   }
 
   private VotingSessionResultResponse createResultResponse(

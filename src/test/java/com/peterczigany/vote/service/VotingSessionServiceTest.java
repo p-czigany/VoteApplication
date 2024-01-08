@@ -12,6 +12,7 @@ import com.peterczigany.vote.exception.VoteNotFoundException;
 import com.peterczigany.vote.exception.VotingSessionNotFoundException;
 import com.peterczigany.vote.model.VotingSession;
 import com.peterczigany.vote.model.VotingSessionDTO;
+import com.peterczigany.vote.model.VotingSessionType;
 import com.peterczigany.vote.repository.VotingSessionRepository;
 import com.peterczigany.vote.response.CreationResponse;
 import com.peterczigany.vote.response.VoteResponse;
@@ -106,7 +107,9 @@ class VotingSessionServiceTest {
     String votingSessionId = "ABC123";
     VotingSessionResultResponse expectedResponse =
         new VotingSessionResultResponse(ResultValue.REJECTED, 3, 1, 1, 1);
-    when(repository.findById(anyString())).thenReturn(Optional.of(TestUtils.validVotingSession()));
+    VotingSession votingSession = TestUtils.validVotingSession();
+    votingSession.setVotingSessionType(VotingSessionType.SUPERMAJORITY);
+    when(repository.findById(anyString())).thenReturn(Optional.of(votingSession));
 
     VotingSessionResultResponse actualResponse = service.getVotingSessionResult(votingSessionId);
 
@@ -118,7 +121,7 @@ class VotingSessionServiceTest {
       throws VotingSessionNotFoundException {
     String votingSessionId = "ABC123";
     VotingSessionResultResponse expectedResponse =
-        new VotingSessionResultResponse(ResultValue.ACCEPTED, 103, 101, 1, 1);
+        new VotingSessionResultResponse(ResultValue.ACCEPTED, 101, 101, 0, 0);
     when(repository.findById(anyString()))
         .thenReturn(Optional.of(TestUtils.supermajorityVotingSession()));
 
