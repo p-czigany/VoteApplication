@@ -52,7 +52,7 @@ public class VotingSessionController {
     return service.getIndividualVote(votingSessionId, representative);
   }
 
-  @ExceptionHandler({VoteNotFoundException.class})
+  @ExceptionHandler({VoteNotFoundException.class, VotingSessionNotFoundException.class})
   @ResponseStatus(HttpStatus.NOT_FOUND)
   public void handleNotFoundException() {}
 

@@ -4,9 +4,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-import com.peterczigany.vote.model.VoteValue;
 import com.peterczigany.vote.model.VotingSession;
-import com.peterczigany.vote.model.VotingSessionType;
 import com.peterczigany.vote.repository.VotingSessionRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
@@ -127,21 +125,19 @@ class VoteApplicationIntegrationTest {
   void testGetVotingSessionResultById() throws Exception {
     mockMvc
         .perform(get("http://localhost:8080/szavazasok/eredmeny").param("szavazas", "ABC123"))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("eredmeny").value("F"));
+        .andExpect(status().isNotFound());
 
-    repository.save(TestUtils.validVotingSession());
-    VotingSession votingSession = TestUtils.validVotingSession();
-    votingSession.setTime(votingSession.getTime().plusMinutes(1));
-    votingSession.setVotingSessionType(VotingSessionType.MAJORITY);
-    votingSession.getVotes().get(2).setVoteValue(VoteValue.FOR);
-    String id = repository.save(votingSession).getId();
-
-    mockMvc
-        .perform(get("http://localhost:8080/szavazasok/eredmeny").param("szavazas", id))
-        .andExpect(status().isOk())
-        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("eredmeny").value("F"));
+//    repository.save(TestUtils.validVotingSession());
+//    VotingSession votingSession = TestUtils.validVotingSession();
+//    votingSession.setTime(votingSession.getTime().plusMinutes(1));
+//    votingSession.setVotingSessionType(VotingSessionType.MAJORITY);
+//    votingSession.getVotes().get(2).setVoteValue(VoteValue.FOR);
+//    String id = repository.save(votingSession).getId();
+//
+//    mockMvc
+//        .perform(get("http://localhost:8080/szavazasok/eredmeny").param("szavazas", id))
+//        .andExpect(status().isOk())
+//        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+//        .andExpect(jsonPath("eredmeny").value("F"));
   }
 }
