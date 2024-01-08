@@ -5,7 +5,6 @@ import com.peterczigany.vote.model.VoteDTO;
 import com.peterczigany.vote.model.VotingSession;
 import com.peterczigany.vote.model.VotingSessionDTO;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -23,6 +22,6 @@ public class VotingSessionMapper {
   private List<Vote> mapVoteDTOsToEntities(List<VoteDTO> dtos) {
     return dtos.stream()
         .map(voteDTO -> new Vote(voteDTO.representative(), voteDTO.voteValue()))
-        .collect(Collectors.toList());
+        .toList();
   }
 }
