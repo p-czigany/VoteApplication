@@ -5,6 +5,7 @@ import com.peterczigany.vote.exception.VoteNotFoundException;
 import com.peterczigany.vote.exception.VotingSessionNotFoundException;
 import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.response.CreationResponse;
+import com.peterczigany.vote.response.DailyVotingSessionsResponse;
 import com.peterczigany.vote.response.VoteResponse;
 import com.peterczigany.vote.response.VotingSessionResultResponse;
 import com.peterczigany.vote.service.VotingSessionService;
@@ -61,5 +62,11 @@ public class VotingSessionController {
   public VotingSessionResultResponse getVotingSessionResult(
       @RequestParam("szavazas") String votingSessionId) throws VotingSessionNotFoundException {
     return service.getVotingSessionResult(votingSessionId);
+  }
+
+  @GetMapping(value = "/szavazasok/napi-szavazasok")
+  @ResponseStatus(HttpStatus.OK)
+  public DailyVotingSessionsResponse getDailyVotingSessions(String date) {
+    return null;
   }
 }

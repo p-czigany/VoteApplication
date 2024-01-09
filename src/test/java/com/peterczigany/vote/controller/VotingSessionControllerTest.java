@@ -8,11 +8,11 @@ import com.peterczigany.vote.TestUtils;
 import com.peterczigany.vote.exception.TimeDuplicationException;
 import com.peterczigany.vote.exception.VoteNotFoundException;
 import com.peterczigany.vote.exception.VotingSessionNotFoundException;
+import com.peterczigany.vote.model.VotingSession;
 import com.peterczigany.vote.model.VotingSessionDTO;
-import com.peterczigany.vote.response.CreationResponse;
-import com.peterczigany.vote.response.VoteResponse;
-import com.peterczigany.vote.response.VotingSessionResultResponse;
+import com.peterczigany.vote.response.*;
 import com.peterczigany.vote.response.VotingSessionResultResponse.ResultValue;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvFileSource;
@@ -130,5 +130,19 @@ class VotingSessionControllerTest {
         .andExpect(jsonPath("igenekSzama").value(120))
         .andExpect(jsonPath("nemekSzama").value(30))
         .andExpect(jsonPath("tartozkodasokSzama").value(0));
+  }
+
+  @Test
+  void testSuccessfulGetDailyVotingSessions() {
+      VotingSession voting1 = TestUtils.validVotingSession();
+      VotingSession voting2 = TestUtils.validVotingSession();
+      voting2.setTime(voting2.getTime().plusHours(1));
+
+    Mockito.when(controller.getDailyVotingSessions("2023-09-28"))
+        .thenReturn(
+            new DailyVotingSessionsResponse(
+                List.of(
+                    new DailyVotingSessionsResponse.DailyVotingSession(voting1.getTime(), voting1.getSubject(), voting1.getVotingSessionType(), voting1),
+                    new DailyVotingSessionsResponse.DailyVotingSession())));
   }
 }

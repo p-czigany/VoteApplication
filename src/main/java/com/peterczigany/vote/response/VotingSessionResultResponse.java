@@ -9,15 +9,4 @@ public record VotingSessionResultResponse(
     @JsonProperty("igenekSzama") long voteCountFor,
     @JsonProperty("nemekSzama") long voteCountAgainst,
     @JsonProperty("tartozkodasokSzama") long voteCountAbstaining) {
-
-  public enum ResultValue {
-    ACCEPTED("F"),
-    REJECTED("U");
-
-    @JsonValue public final String label;
-
-    ResultValue(String label) {
-      this.label = label;
-    }
-  }
 }
