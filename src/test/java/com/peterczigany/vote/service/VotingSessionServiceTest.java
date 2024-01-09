@@ -137,7 +137,8 @@ class VotingSessionServiceTest {
 
     when(repository.findById(anyString()))
         .thenReturn(Optional.of(TestUtils.majorityVotingSession(6, 2, 2)));
-    when(repository.findLatestPresenceVotingSessionBefore(any(ZonedDateTime.class)))
+    when(repository.findLatestPresenceVotingSessionBefore(
+            any(VotingSessionType.class), any(ZonedDateTime.class)))
         .thenReturn(Optional.of(TestUtils.sessionWithXPresent(10)));
 
     assertThat(service.getVotingSessionResult(votingSessionId)).isEqualTo(expectedResponse);
@@ -151,7 +152,8 @@ class VotingSessionServiceTest {
 
     when(repository.findById(anyString()))
         .thenReturn(Optional.of(TestUtils.majorityVotingSession(6, 2, 2)));
-    when(repository.findLatestPresenceVotingSessionBefore(any(ZonedDateTime.class)))
+    when(repository.findLatestPresenceVotingSessionBefore(
+            any(VotingSessionType.class), any(ZonedDateTime.class)))
         .thenReturn(Optional.of(TestUtils.sessionWithXPresent(12)));
 
     assertThat(service.getVotingSessionResult(votingSessionId)).isEqualTo(expectedResponse);
@@ -161,7 +163,8 @@ class VotingSessionServiceTest {
   void testGetVotingSessionResultFail_whenTypeIsMajorityAndNoPreviousPresence() {
     when(repository.findById(anyString()))
         .thenReturn(Optional.of(TestUtils.majorityVotingSession(6, 2, 2)));
-    when(repository.findLatestPresenceVotingSessionBefore(any(ZonedDateTime.class)))
+    when(repository.findLatestPresenceVotingSessionBefore(
+            any(VotingSessionType.class), any(ZonedDateTime.class)))
         .thenReturn(Optional.empty());
 
     assertThatThrownBy(() -> service.getVotingSessionResult("ABC123"))

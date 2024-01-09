@@ -1,9 +1,6 @@
 package com.peterczigany.vote.service;
 
-import com.peterczigany.vote.exception.TimeDuplicationException;
-import com.peterczigany.vote.exception.VoteException;
-import com.peterczigany.vote.exception.VoteNotFoundException;
-import com.peterczigany.vote.exception.VotingSessionNotFoundException;
+import com.peterczigany.vote.exception.*;
 import com.peterczigany.vote.model.Vote;
 import com.peterczigany.vote.model.VoteValue;
 import com.peterczigany.vote.model.VotingSession;
@@ -22,7 +19,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class VotingSessionService {
 
-  private static final int TOTAL_NUMBER_OF_MEMBERS_OF_PARLIAMENT = 200;
+  private static final long TOTAL_NUMBER_OF_MEMBERS_OF_PARLIAMENT = 200;
   private final VotingSessionRepository repository;
   private final VotingSessionMapper mapper;
 
@@ -71,16 +68,32 @@ public class VotingSessionService {
       return createResultResponse(ResultValue.ACCEPTED, votingSession);
     }
     if (votingSession.getVotingSessionType().equals(VotingSessionType.SUPERMAJORITY)) {
-      return superMajorityResult(votingSession);
+      return evaluateNumberOfVotes(votingSession, TOTAL_NUMBER_OF_MEMBERS_OF_PARLIAMENT);
+    }
+    if (votingSession.getVotingSessionType().equals(VotingSessionType.MAJORITY)) {
+      return majorityResult(votingSession);
     }
     return null;
   }
 
-  private VotingSessionResultResponse superMajorityResult(VotingSession votingSession) {
-    if ((votingSession.countVotes(VoteValue.FOR) * 2) > TOTAL_NUMBER_OF_MEMBERS_OF_PARLIAMENT) {
+  private VotingSessionResultResponse evaluateNumberOfVotes(
+      VotingSession votingSession, long totalRepresentatives) {
+    if ((votingSession.countVotes(VoteValue.FOR) * 2) > totalRepresentatives) {
       return createResultResponse(ResultValue.ACCEPTED, votingSession);
     }
     return createResultResponse(ResultValue.REJECTED, votingSession);
+  }
+
+  private VotingSessionResultResponse majorityResult(VotingSession votingSession)
+      throws PriorPresenceVotingNotFoundException {
+    VotingSession priorPresenceVoting =
+        repository
+            .findLatestPresenceVotingSessionBefore(VotingSessionType.PRESENCE, votingSession.getTime())
+            .orElseThrow(
+                () ->
+                    new PriorPresenceVotingNotFoundException(
+                        "Nem található korábbi jelenléti szavazás"));
+    return evaluateNumberOfVotes(votingSession, priorPresenceVoting.countTotalVotes());
   }
 
   private VotingSessionResultResponse createResultResponse(

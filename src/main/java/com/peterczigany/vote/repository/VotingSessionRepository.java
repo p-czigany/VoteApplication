@@ -1,6 +1,7 @@
 package com.peterczigany.vote.repository;
 
 import com.peterczigany.vote.model.VotingSession;
+import com.peterczigany.vote.model.VotingSessionType;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,7 +15,10 @@ public interface VotingSessionRepository extends JpaRepository<VotingSession, Lo
 
   Optional<VotingSession> findById(String id);
 
-  @Query("SELECT vs FROM VotingSession vs WHERE vs.votingSessionType = :votingSessionType " +
-      "AND vs.time < :time ORDER BY vs.time DESC")
-  Optional<VotingSession> findLatestPresenceVotingSessionBefore(@Param("time") ZonedDateTime time);
+  @Query(
+      "SELECT vs FROM VotingSession vs WHERE vs.votingSessionType = :votingSessionType "
+          + "AND vs.time < :time ORDER BY vs.time ASC LIMIT 1")
+  Optional<VotingSession> findLatestPresenceVotingSessionBefore(
+      @Param("votingSessionType") VotingSessionType votingSessionType,
+      @Param("time") ZonedDateTime time);
 }
