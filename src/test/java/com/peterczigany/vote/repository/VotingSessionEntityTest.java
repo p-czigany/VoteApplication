@@ -41,37 +41,46 @@ class VotingSessionEntityTest {
         .isEqualTo(VoteValue.FOR);
   }
 
-//  @Test
-//  void testFindLastestPresenceVotingBeforeTime() {
-//    VotingSession presence1 = TestUtils.sessionWithXPresent(10); // "2023-09-28T11:01:25Z"
-//    VotingSession supermajority = TestUtils.supermajorityVotingSession();
-//    supermajority.setTime(supermajority.getTime().minusMinutes(10)); // "2023-09-28T10:56:25Z"
-//    VotingSession presence2 = TestUtils.sessionWithXPresent(20);
-//    presence2.setTime(presence2.getTime().plusMinutes(10)); // "2023-09-28T11:11:25Z"
-//    VotingSession majority = TestUtils.majorityVotingSession(5, 3, 1); // "2023-09-28T11:06:25Z"
-//    VotingSession presence3 = TestUtils.sessionWithXPresent(30);
-//    presence3.setTime(presence3.getTime().minusMinutes(10)); // "2023-09-28T10:51:25Z"
-//    presence1 = repository.save(presence1);
-//    supermajority = repository.save(supermajority);
-//    presence2 = repository.save(presence2);
-//    majority = repository.save(majority);
-//    presence3 = repository.save(presence3);
-//
-//    assertThat(
-//            repository.findLatestPresenceVotingSessionBefore(
-//                VotingSessionType.PRESENCE, ZonedDateTime.parse("2023-09-28T11:00:00Z")))
-//        .isEqualTo(Optional.of(presence3));
-//    assertThat(
-//            repository.findLatestPresenceVotingSessionBefore(
-//                VotingSessionType.PRESENCE, ZonedDateTime.parse("2023-09-28T11:10:00Z")))
-//        .isEqualTo(Optional.of(presence1));
-//    assertThat(
-//            repository.findLatestPresenceVotingSessionBefore(
-//                VotingSessionType.PRESENCE, ZonedDateTime.parse("2023-09-28T11:12:25Z")))
-//        .isEqualTo(Optional.of(presence2));
-//    assertThat(
-//            repository.findLatestPresenceVotingSessionBefore(
-//                VotingSessionType.PRESENCE, ZonedDateTime.parse("2023-09-28T11:01:25Z")))
-//        .isEqualTo(Optional.of(presence3));
-//  }
+  @Test
+  void testFindLastestPresenceVotingBeforeTime() {
+    VotingSession presence1 = TestUtils.sessionWithXPresent(10); // "2023-09-28T11:01:25Z"
+    VotingSession supermajority = TestUtils.supermajorityVotingSession();
+    supermajority.setTime(supermajority.getTime().minusMinutes(10)); // "2023-09-28T10:56:25Z"
+    VotingSession presence2 = TestUtils.sessionWithXPresent(20);
+    presence2.setTime(presence2.getTime().plusMinutes(10)); // "2023-09-28T11:11:25Z"
+    VotingSession majority = TestUtils.majorityVotingSession(5, 3, 1); // "2023-09-28T11:06:25Z"
+    VotingSession presence3 = TestUtils.sessionWithXPresent(30);
+    presence3.setTime(presence3.getTime().minusMinutes(10)); // "2023-09-28T10:51:25Z"
+    repository.save(presence1);
+    repository.save(supermajority);
+    repository.save(presence2);
+    repository.save(majority);
+    repository.save(presence3);
+
+    VotingSession voting1 =
+        repository
+            .findLatestPresenceVotingSessionBefore(
+                VotingSessionType.PRESENCE, ZonedDateTime.parse("2023-09-28T11:00:00Z"))
+            .orElseThrow();
+    VotingSession voting2 =
+        repository
+            .findLatestPresenceVotingSessionBefore(
+                VotingSessionType.PRESENCE, ZonedDateTime.parse("2023-09-28T11:10:00Z"))
+            .orElseThrow();
+    VotingSession voting3 =
+        repository
+            .findLatestPresenceVotingSessionBefore(
+                VotingSessionType.PRESENCE, ZonedDateTime.parse("2023-09-28T11:12:25Z"))
+            .orElseThrow();
+    VotingSession voting4 =
+        repository
+            .findLatestPresenceVotingSessionBefore(
+                VotingSessionType.PRESENCE, ZonedDateTime.parse("2023-09-28T11:01:25Z"))
+            .orElseThrow();
+
+    assertThat(voting1.countTotalVotes()).isEqualTo(30);
+    assertThat(voting2.countTotalVotes()).isEqualTo(10);
+    assertThat(voting3.countTotalVotes()).isEqualTo(20);
+    assertThat(voting4.countTotalVotes()).isEqualTo(30);
+  }
 }
