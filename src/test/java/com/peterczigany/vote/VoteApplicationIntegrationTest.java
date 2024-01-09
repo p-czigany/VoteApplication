@@ -164,4 +164,17 @@ class VoteApplicationIntegrationTest {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("eredmeny").value("U"));
   }
+
+  @Test
+  void testDailyVotingSessions() throws Exception {
+
+    String day = "2007-12-03";
+
+    mockMvc
+        .perform(get("http://localhost:8080/szavazasok/napi-szavazasok").param("nap", day))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.szavazasok").isArray())
+        .andExpect(jsonPath("$.szavazasok.length()").value(2));
+  }
 }
