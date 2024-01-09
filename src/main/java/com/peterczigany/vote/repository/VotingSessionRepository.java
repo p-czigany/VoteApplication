@@ -17,7 +17,7 @@ public interface VotingSessionRepository extends JpaRepository<VotingSession, Lo
 
   @Query(
       "SELECT vs FROM VotingSession vs WHERE vs.votingSessionType = :votingSessionType "
-          + "AND vs.time < :time ORDER BY vs.time ASC LIMIT 1")
+          + "AND vs.time < :time ORDER BY vs.time DESC LIMIT 1")
   Optional<VotingSession> findLatestPresenceVotingSessionBefore(
       @Param("votingSessionType") VotingSessionType votingSessionType,
       @Param("time") ZonedDateTime time);
