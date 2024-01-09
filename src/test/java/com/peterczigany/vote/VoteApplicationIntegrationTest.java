@@ -179,6 +179,7 @@ class VoteApplicationIntegrationTest {
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.szavazasok").isArray())
-        .andExpect(jsonPath("$.szavazasok.length()").value(2));
+        .andExpect(jsonPath("$.szavazasok.length()").value(2))
+        .andExpect(jsonPath("$.szavazasok[1].kepviselokSzama").value(3));
   }
 }
