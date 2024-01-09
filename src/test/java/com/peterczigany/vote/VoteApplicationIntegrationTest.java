@@ -167,8 +167,12 @@ class VoteApplicationIntegrationTest {
 
   @Test
   void testDailyVotingSessions() throws Exception {
+    VotingSession votingSession = TestUtils.validVotingSession();
+    votingSession.setTime(votingSession.getTime().plusMinutes(2));
+    repository.save(votingSession);
+    repository.save(TestUtils.validVotingSession());
 
-    String day = "2007-12-03";
+    String day = "2023-09-28";
 
     mockMvc
         .perform(get("http://localhost:8080/szavazasok/napi-szavazasok").param("nap", day))
