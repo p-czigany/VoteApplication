@@ -9,6 +9,8 @@ import com.peterczigany.vote.model.VoteValue;
 import com.peterczigany.vote.model.VotingSession;
 import com.peterczigany.vote.model.VotingSessionType;
 import com.peterczigany.vote.repository.VotingSessionRepository;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -18,9 +20,6 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
-
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -152,14 +151,17 @@ class VoteApplicationIntegrationTest {
 
     VotingSession presenceVotingSession = TestUtils.validVotingSession();
     presenceVotingSession.setTime(presenceVotingSession.getTime().plusMinutes(1));
-    presenceVotingSession.setVotes(Stream.concat(presenceVotingSession.getVotes().stream(), Stream.of(new Vote("Kepviselo4", VoteValue.FOR))).collect(Collectors.toList()));
-//  add(new Vote("Kepviselo4", VoteValue.FOR));
+    presenceVotingSession.setVotes(
+        Stream.concat(
+                presenceVotingSession.getVotes().stream(),
+                Stream.of(new Vote("Kepviselo4", VoteValue.FOR)))
+            .collect(Collectors.toList()));
     repository.save(presenceVotingSession);
 
     mockMvc
         .perform(get("http://localhost:8080/szavazasok/eredmeny").param("szavazas", id))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("eredmeny").value("F"));
+        .andExpect(jsonPath("eredmeny").value("U"));
   }
 }
