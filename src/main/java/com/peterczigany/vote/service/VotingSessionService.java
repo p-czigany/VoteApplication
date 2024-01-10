@@ -10,7 +10,7 @@ import com.peterczigany.vote.repository.VotingSessionRepository;
 import com.peterczigany.vote.response.CreationResponse;
 import com.peterczigany.vote.response.VoteResponse;
 import com.peterczigany.vote.response.VotingSessionResultResponse;
-import com.peterczigany.vote.response.VotingSessionResultResponse.ResultValue;
+import com.peterczigany.vote.response.ResultValue;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;

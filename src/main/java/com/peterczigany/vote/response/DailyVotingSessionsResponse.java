@@ -15,6 +15,6 @@ public record DailyVotingSessionsResponse(
       @JsonProperty("tipus") VotingSessionType type,
       @JsonProperty("elnok") String chair,
       @JsonProperty("eredmeny") ResultValue result,
-      @JsonProperty("kepviselokSzama") int numberOfRepresentatives,
+      @JsonProperty("kepviselokSzama") long numberOfRepresentatives,
       @JsonProperty("szavazatok") List<VoteDTO> voteDTOs) {}
 }

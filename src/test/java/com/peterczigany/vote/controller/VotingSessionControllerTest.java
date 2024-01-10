@@ -8,10 +8,8 @@ import com.peterczigany.vote.TestUtils;
 import com.peterczigany.vote.exception.TimeDuplicationException;
 import com.peterczigany.vote.exception.VoteNotFoundException;
 import com.peterczigany.vote.exception.VotingSessionNotFoundException;
-import com.peterczigany.vote.model.VotingSession;
 import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.response.*;
-import com.peterczigany.vote.response.VotingSessionResultResponse.ResultValue;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -133,16 +131,36 @@ class VotingSessionControllerTest {
   }
 
   @Test
-  void testSuccessfulGetDailyVotingSessions() {
-      VotingSession voting1 = TestUtils.validVotingSession();
-      VotingSession voting2 = TestUtils.validVotingSession();
-      voting2.setTime(voting2.getTime().plusHours(1));
+  void testSuccessfulGetDailyVotingSessions() throws Exception {
+    VotingSessionDTO votingDTO = TestUtils.validVotingSessionDTO();
 
     Mockito.when(controller.getDailyVotingSessions("2023-09-28"))
         .thenReturn(
             new DailyVotingSessionsResponse(
                 List.of(
-                    new DailyVotingSessionsResponse.DailyVotingSession(voting1.getTime(), voting1.getSubject(), voting1.getVotingSessionType(), voting1),
-                    new DailyVotingSessionsResponse.DailyVotingSession())));
+                    new DailyVotingSessionsResponse.DailyVotingSession(
+                        votingDTO.time(),
+                        votingDTO.subject(),
+                        votingDTO.votingSessionType(),
+                        votingDTO.chair(),
+                        ResultValue.ACCEPTED,
+                        3L,
+                        votingDTO.voteDTOs()),
+                    new DailyVotingSessionsResponse.DailyVotingSession(
+                        votingDTO.time().plusHours(1),
+                        votingDTO.subject(),
+                        votingDTO.votingSessionType(),
+                        votingDTO.chair(),
+                        ResultValue.ACCEPTED,
+                        3L,
+                        votingDTO.voteDTOs()))));
+
+    mockMvc
+        .perform(get("http://localhost:8080/szavazasok/napi-szavazasok").param("nap", "2023-09-28"))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.szavazasok").isArray())
+        .andExpect(jsonPath("$.szavazasok.length()").value(2))
+        .andExpect(jsonPath("$.szavazasok[1].kepviselokSzama").value(3));
   }
 }
