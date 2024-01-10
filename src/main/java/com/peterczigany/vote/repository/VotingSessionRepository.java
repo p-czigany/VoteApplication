@@ -2,7 +2,8 @@ package com.peterczigany.vote.repository;
 
 import com.peterczigany.vote.model.VotingSession;
 import com.peterczigany.vote.model.VotingSessionType;
-import java.time.ZonedDateTime;
+import java.time.*;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -21,4 +22,17 @@ public interface VotingSessionRepository extends JpaRepository<VotingSession, Lo
   Optional<VotingSession> findLatestPresenceVotingSessionBefore(
       @Param("votingSessionType") VotingSessionType votingSessionType,
       @Param("time") ZonedDateTime time);
+
+  @Query("SELECT v FROM VotingSession v WHERE v.time >= :beginningOfDay AND v.time <= :endOfDay")
+  List<VotingSession> findVotingSessionsBetweenTimes(
+      @Param("beginningOfDay") ZonedDateTime beginningOfDay,
+      @Param("endOfDay") ZonedDateTime endOfDay);
+
+  default List<VotingSession> findDailyVotingSessions(LocalDate localDate) {
+    ZonedDateTime beginningOfDay = localDate.atStartOfDay(ZoneId.systemDefault());
+    ZonedDateTime endOfDay =
+        LocalDateTime.of(localDate, LocalTime.MAX).atZone(ZoneId.systemDefault());
+
+    return findVotingSessionsBetweenTimes(beginningOfDay, endOfDay);
+  }
 }
