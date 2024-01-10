@@ -8,10 +8,15 @@ import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.model.VotingSessionType;
 import com.peterczigany.vote.repository.VotingSessionRepository;
 import com.peterczigany.vote.response.CreationResponse;
+import com.peterczigany.vote.response.DailyVotingSessionsResponse;
+import com.peterczigany.vote.response.DailyVotingSessionsResponse.DailyVotingSession;
+import com.peterczigany.vote.response.ResultValue;
 import com.peterczigany.vote.response.VoteResponse;
 import com.peterczigany.vote.response.VotingSessionResultResponse;
-import com.peterczigany.vote.response.ResultValue;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -64,16 +69,19 @@ public class VotingSessionService {
             .findById(votingSessionId)
             .orElseThrow(() -> new VotingSessionNotFoundException("Nem található ilyen szavazás"));
 
-    if (votingSession.getVotingSessionType().equals(VotingSessionType.PRESENCE)) {
-      return createResultResponse(ResultValue.ACCEPTED, votingSession);
-    }
-    if (votingSession.getVotingSessionType().equals(VotingSessionType.SUPERMAJORITY)) {
-      return evaluateNumberOfVotes(votingSession, TOTAL_NUMBER_OF_MEMBERS_OF_PARLIAMENT);
-    }
-    if (votingSession.getVotingSessionType().equals(VotingSessionType.MAJORITY)) {
-      return majorityResult(votingSession);
-    }
-    return null;
+    return evaluateVotingSession(votingSession);
+  }
+
+  private VotingSessionResultResponse evaluateVotingSession(VotingSession votingSession)
+      throws PriorPresenceVotingNotFoundException {
+    VotingSessionType sessionType = votingSession.getVotingSessionType();
+
+    return switch (sessionType) {
+      case PRESENCE -> createResultResponse(ResultValue.ACCEPTED, votingSession);
+      case MAJORITY -> majorityResult(votingSession);
+      case SUPERMAJORITY -> evaluateNumberOfVotes(
+          votingSession, TOTAL_NUMBER_OF_MEMBERS_OF_PARLIAMENT);
+    };
   }
 
   private VotingSessionResultResponse evaluateNumberOfVotes(
@@ -88,7 +96,8 @@ public class VotingSessionService {
       throws PriorPresenceVotingNotFoundException {
     VotingSession priorPresenceVoting =
         repository
-            .findLatestPresenceVotingSessionBefore(VotingSessionType.PRESENCE, votingSession.getTime())
+            .findLatestPresenceVotingSessionBefore(
+                VotingSessionType.PRESENCE, votingSession.getTime())
             .orElseThrow(
                 () ->
                     new PriorPresenceVotingNotFoundException(
@@ -104,5 +113,32 @@ public class VotingSessionService {
         votingSession.countVotes(VoteValue.FOR),
         votingSession.countVotes(VoteValue.AGAINST),
         votingSession.countVotes(VoteValue.ABSTAIN));
+  }
+
+  public DailyVotingSessionsResponse getDailyVotingSessions(String date) {
+    List<VotingSession> dailyVotingSessions =
+        repository.findDailyVotingSessions(LocalDate.parse(date));
+
+    if (dailyVotingSessions.isEmpty())
+      return new DailyVotingSessionsResponse(Collections.emptyList());
+
+    return new DailyVotingSessionsResponse(
+        dailyVotingSessions.stream()
+            .map(
+                voting -> {
+                  try {
+                    return new DailyVotingSession(
+                        voting.getTime(),
+                        voting.getSubject(),
+                        voting.getVotingSessionType(),
+                        voting.getChair(),
+                        evaluateVotingSession(voting).result(),
+                        voting.countTotalVotes(),
+                        mapper.mapVotesToDTOs(voting.getVotes()));
+                  } catch (VotingSessionNotFoundException e) {
+                    throw new VotingRuntimeException(e);
+                  }
+                })
+            .toList());
   }
 }

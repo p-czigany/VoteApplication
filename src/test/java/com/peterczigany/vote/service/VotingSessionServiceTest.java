@@ -180,6 +180,8 @@ class VotingSessionServiceTest {
     voting2.setTime(voting2.getTime().plusHours(1));
     when(repository.findDailyVotingSessions(any())).thenReturn(List.of(voting1, voting2));
     VotingSessionDTO votingDTO = TestUtils.validVotingSessionDTO();
+    when(mapper.mapVotesToDTOs(voting1.getVotes())).thenReturn(votingDTO.voteDTOs());
+    when(mapper.mapVotesToDTOs(voting2.getVotes())).thenReturn(votingDTO.voteDTOs());
 
     assertThat(service.getDailyVotingSessions("2023-09-28"))
         .isEqualTo(

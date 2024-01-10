@@ -24,4 +24,10 @@ public class VotingSessionMapper {
         .map(voteDTO -> new Vote(voteDTO.representative(), voteDTO.voteValue()))
         .toList();
   }
+
+  public List<VoteDTO> mapVotesToDTOs(List<Vote> entities) {
+    return entities.stream()
+        .map(voteEntity -> new VoteDTO(voteEntity.getRepresentative(), voteEntity.getVoteValue()))
+        .toList();
+  }
 }
