@@ -16,9 +16,10 @@ import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.model.VotingSessionType;
 import com.peterczigany.vote.repository.VotingSessionRepository;
 import com.peterczigany.vote.response.CreationResponse;
+import com.peterczigany.vote.response.DailyVotingSessionsResponse;
+import com.peterczigany.vote.response.ResultValue;
 import com.peterczigany.vote.response.VoteResponse;
 import com.peterczigany.vote.response.VotingSessionResultResponse;
-import com.peterczigany.vote.response.ResultValue;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -173,14 +174,32 @@ class VotingSessionServiceTest {
   }
 
   @Test
-    void testGetDailyVotingSessions() {
-      VotingSession voting1 = TestUtils.validVotingSession();
-      VotingSession voting2 = TestUtils.validVotingSession();
-      voting2.setTime(voting2.getTime().plusHours(1));
+  void testGetDailyVotingSessions() {
+    VotingSession voting1 = TestUtils.validVotingSession();
+    VotingSession voting2 = TestUtils.validVotingSession();
+    voting2.setTime(voting2.getTime().plusHours(1));
+    when(repository.findDailyVotingSessions(any())).thenReturn(List.of(voting1, voting2));
+    VotingSessionDTO votingDTO = TestUtils.validVotingSessionDTO();
 
-      when(repository.findDailyVotingSessions(any())).thenReturn(List.of(voting1, voting2));
-
-      assertThat(service.getDailyVotingSessions("2023-09-28")).thenReturns(new );
-//      getDailyVotingSessions
+    assertThat(service.getDailyVotingSessions("2023-09-28"))
+        .isEqualTo(
+            new DailyVotingSessionsResponse(
+                List.of(
+                    new DailyVotingSessionsResponse.DailyVotingSession(
+                        votingDTO.time(),
+                        votingDTO.subject(),
+                        votingDTO.votingSessionType(),
+                        votingDTO.chair(),
+                        ResultValue.ACCEPTED,
+                        3L,
+                        votingDTO.voteDTOs()),
+                    new DailyVotingSessionsResponse.DailyVotingSession(
+                        votingDTO.time().plusHours(1),
+                        votingDTO.subject(),
+                        votingDTO.votingSessionType(),
+                        votingDTO.chair(),
+                        ResultValue.ACCEPTED,
+                        3L,
+                        votingDTO.voteDTOs()))));
   }
 }
