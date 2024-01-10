@@ -66,7 +66,7 @@ public class VotingSessionController {
 
   @GetMapping(value = "/szavazasok/napi-szavazasok")
   @ResponseStatus(HttpStatus.OK)
-  public DailyVotingSessionsResponse getDailyVotingSessions(String date) {
-    return null;
+  public DailyVotingSessionsResponse getDailyVotingSessions(@RequestParam("nap") String date) {
+    return service.getDailyVotingSessions(date);
   }
 }
