@@ -168,6 +168,7 @@ class VoteApplicationIntegrationTest {
   @Test
   void testDailyVotingSessions() throws Exception {
     VotingSession votingSession = TestUtils.validVotingSession();
+    votingSession.setVotingSessionType(VotingSessionType.MAJORITY);
     votingSession.setTime(votingSession.getTime().plusMinutes(2));
     repository.save(votingSession);
     repository.save(TestUtils.validVotingSession());
@@ -180,6 +181,10 @@ class VoteApplicationIntegrationTest {
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
         .andExpect(jsonPath("$.szavazasok").isArray())
         .andExpect(jsonPath("$.szavazasok.length()").value(2))
+        .andExpect(jsonPath("$.szavazasok[0].tipus").value("j"))
+        .andExpect(jsonPath("$.szavazasok[0].eredmeny").value("F"))
+        .andExpect(jsonPath("$.szavazasok[1].tipus").value("e"))
+        .andExpect(jsonPath("$.szavazasok[1].eredmeny").value("U"))
         .andExpect(jsonPath("$.szavazasok[1].kepviselokSzama").value(3))
         .andExpect(jsonPath("$.szavazasok[1].szavazatok.length()").value(3));
   }

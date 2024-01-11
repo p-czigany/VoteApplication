@@ -23,7 +23,9 @@ public interface VotingSessionRepository extends JpaRepository<VotingSession, Lo
       @Param("votingSessionType") VotingSessionType votingSessionType,
       @Param("time") ZonedDateTime time);
 
-  @Query("SELECT v FROM VotingSession v WHERE v.time >= :beginningOfDay AND v.time <= :endOfDay")
+  @Query(
+      "SELECT vs FROM VotingSession vs WHERE vs.time >= :beginningOfDay "
+          + "AND vs.time <= :endOfDay ORDER BY vs.time")
   List<VotingSession> findVotingSessionsBetweenTimes(
       @Param("beginningOfDay") ZonedDateTime beginningOfDay,
       @Param("endOfDay") ZonedDateTime endOfDay);
