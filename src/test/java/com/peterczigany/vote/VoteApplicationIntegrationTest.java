@@ -188,4 +188,32 @@ class VoteApplicationIntegrationTest {
         .andExpect(jsonPath("$.szavazasok[1].kepviselokSzama").value(3))
         .andExpect(jsonPath("$.szavazasok[1].szavazatok.length()").value(3));
   }
+
+  @Test
+  void testRepresentativeAverageParticipation() throws Exception {
+    VotingSession votingSession = TestUtils.validVotingSession();
+    votingSession.setVotingSessionType(VotingSessionType.MAJORITY);
+    votingSession.setTime(votingSession.getTime().plusMinutes(2));
+    repository.save(votingSession);
+    VotingSession votingSession2 = TestUtils.validVotingSession();
+    votingSession2.setVotingSessionType(VotingSessionType.SUPERMAJORITY);
+    votingSession2.setTime(votingSession2.getTime().plusHours(1));
+    repository.save(votingSession2);
+    repository.save(TestUtils.validVotingSession());
+
+    String representative = "Kepviselo2";
+    String startDay = "2023-09-27";
+    String endDay = "2023-09-29";
+
+    mockMvc
+        .perform(
+            get("http://localhost:8080/szavazasok/kepviselo-reszveteli-atlag")
+                .param("kepviselo", representative)
+                .param("idoszakKezdete", startDay)
+                .param("idoszakVege", endDay))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.szavazasok").isNotEmpty())
+        .andExpect(jsonPath("$.szavazasok").value(0.67));
+  }
 }
