@@ -21,7 +21,7 @@ class VotingSessionEntityTest {
   @Autowired private VotingSessionRepository repository;
 
   @BeforeEach
-  void init() {
+  public void init() {
     VotingSession presence1 = TestUtils.sessionWithXPresent(10); // "2023-09-28T11:01:25Z"
     VotingSession supermajority = TestUtils.supermajorityVotingSession();
     supermajority.setTime(supermajority.getTime().minusMinutes(10)); // "2023-09-28T10:56:25Z"
