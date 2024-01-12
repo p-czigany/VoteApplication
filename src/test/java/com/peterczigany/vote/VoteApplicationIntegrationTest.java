@@ -207,7 +207,7 @@ class VoteApplicationIntegrationTest {
 
     mockMvc
         .perform(
-            get("http://localhost:8080/szavazasok/kepviselo-reszveteli-atlag")
+            get("http://localhost:8080/szavazasok/kepviselo-reszvetel-atlag")
                 .param("kepviselo", representative)
                 .param("idoszakKezdete", startDay)
                 .param("idoszakVege", endDay))
