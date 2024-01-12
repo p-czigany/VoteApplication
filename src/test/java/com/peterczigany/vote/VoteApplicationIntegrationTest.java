@@ -213,7 +213,7 @@ class VoteApplicationIntegrationTest {
                 .param("idoszakVege", endDay))
         .andExpect(status().isOk())
         .andExpect(content().contentType(MediaType.APPLICATION_JSON))
-        .andExpect(jsonPath("$.szavazasok").isNotEmpty())
-        .andExpect(jsonPath("$.szavazasok").value(0.67));
+        .andExpect(jsonPath("$.atlag").exists())
+        .andExpect(jsonPath("$.atlag").value(0.67));
   }
 }
