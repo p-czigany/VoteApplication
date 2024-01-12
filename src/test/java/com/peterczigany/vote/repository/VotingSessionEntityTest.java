@@ -6,9 +6,11 @@ import com.peterczigany.vote.TestUtils;
 import com.peterczigany.vote.model.VoteValue;
 import com.peterczigany.vote.model.VotingSession;
 import com.peterczigany.vote.model.VotingSessionType;
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Optional;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -17,6 +19,23 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 class VotingSessionEntityTest {
 
   @Autowired private VotingSessionRepository repository;
+
+  @BeforeEach
+  void init() {
+    VotingSession presence1 = TestUtils.sessionWithXPresent(10); // "2023-09-28T11:01:25Z"
+    VotingSession supermajority = TestUtils.supermajorityVotingSession();
+    supermajority.setTime(supermajority.getTime().minusMinutes(10)); // "2023-09-28T10:56:25Z"
+    VotingSession presence2 = TestUtils.sessionWithXPresent(20);
+    presence2.setTime(presence2.getTime().plusMinutes(10)); // "2023-09-28T11:11:25Z"
+    VotingSession majority = TestUtils.majorityVotingSession(5, 3, 1); // "2023-09-28T11:06:25Z"
+    VotingSession presence3 = TestUtils.sessionWithXPresent(30);
+    presence3.setTime(presence3.getTime().minusMinutes(10)); // "2023-09-28T10:51:25Z"
+    repository.save(presence1);
+    repository.save(supermajority);
+    repository.save(presence2);
+    repository.save(majority);
+    repository.save(presence3);
+  }
 
   @Test
   void testPersisting() {
@@ -43,20 +62,6 @@ class VotingSessionEntityTest {
 
   @Test
   void testFindLastestPresenceVotingBeforeTime() {
-    VotingSession presence1 = TestUtils.sessionWithXPresent(10); // "2023-09-28T11:01:25Z"
-    VotingSession supermajority = TestUtils.supermajorityVotingSession();
-    supermajority.setTime(supermajority.getTime().minusMinutes(10)); // "2023-09-28T10:56:25Z"
-    VotingSession presence2 = TestUtils.sessionWithXPresent(20);
-    presence2.setTime(presence2.getTime().plusMinutes(10)); // "2023-09-28T11:11:25Z"
-    VotingSession majority = TestUtils.majorityVotingSession(5, 3, 1); // "2023-09-28T11:06:25Z"
-    VotingSession presence3 = TestUtils.sessionWithXPresent(30);
-    presence3.setTime(presence3.getTime().minusMinutes(10)); // "2023-09-28T10:51:25Z"
-    repository.save(presence1);
-    repository.save(supermajority);
-    repository.save(presence2);
-    repository.save(majority);
-    repository.save(presence3);
-
     VotingSession voting1 =
         repository
             .findLatestPresenceVotingSessionBefore(
@@ -82,5 +87,32 @@ class VotingSessionEntityTest {
     assertThat(voting2.countTotalVotes()).isEqualTo(10);
     assertThat(voting3.countTotalVotes()).isEqualTo(20);
     assertThat(voting4.countTotalVotes()).isEqualTo(30);
+  }
+
+  @Test
+  void testCountVotingSessionsByRepresentativeBetweenDays() {
+    String representative = "Kepviselo2";
+    LocalDate startDate1 = LocalDate.parse("2023-09-27");
+    LocalDate endDate1 = LocalDate.parse("2023-09-29");
+
+    LocalDate startDate2 = LocalDate.parse("2023-09-26");
+    LocalDate endDate2 = LocalDate.parse("2023-09-28");
+
+    LocalDate startDate3 = LocalDate.parse("2023-09-28");
+    LocalDate endDate3 = LocalDate.parse("2023-09-30");
+
+    long count1 =
+        repository.countVotingSessionsByRepresentativeBetweenDays(
+            representative, startDate1, endDate1);
+    long count2 =
+        repository.countVotingSessionsByRepresentativeBetweenDays(
+            representative, startDate2, endDate2);
+    long count3 =
+        repository.countVotingSessionsByRepresentativeBetweenDays(
+            representative, startDate3, endDate3);
+
+    assertThat(count1).isEqualTo(2);
+    assertThat(count2).isEqualTo(2);
+    assertThat(count3).isEqualTo(2);
   }
 }
