@@ -163,4 +163,24 @@ class VotingSessionControllerTest {
         .andExpect(jsonPath("$.szavazasok.length()").value(2))
         .andExpect(jsonPath("$.szavazasok[1].kepviselokSzama").value(3));
   }
+
+  @Test
+  void testRepresentativeAverageParticipation() throws Exception {
+    String representative = "Kepviselo2";
+    String startDay = "2023-09-27";
+    String endDay = "2023-09-29";
+    Mockito.when(controller.getAverageParticipation(representative, startDay, endDay))
+        .thenReturn(new AverageParticipationResponse(0.67));
+
+    mockMvc
+        .perform(
+            get("http://localhost:8080/szavazasok/kepviselo-reszveteli-atlag")
+                .param("kepviselo", representative)
+                .param("idoszakKezdete", startDay)
+                .param("idoszakVege", endDay))
+        .andExpect(status().isOk())
+        .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+        .andExpect(jsonPath("$.atlag").exists())
+        .andExpect(jsonPath("$.atlag").value(0.67));
+  }
 }
