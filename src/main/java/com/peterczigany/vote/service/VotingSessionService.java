@@ -7,12 +7,10 @@ import com.peterczigany.vote.model.VotingSession;
 import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.model.VotingSessionType;
 import com.peterczigany.vote.repository.VotingSessionRepository;
-import com.peterczigany.vote.response.CreationResponse;
-import com.peterczigany.vote.response.DailyVotingSessionsResponse;
+import com.peterczigany.vote.response.*;
 import com.peterczigany.vote.response.DailyVotingSessionsResponse.DailyVotingSession;
-import com.peterczigany.vote.response.ResultValue;
-import com.peterczigany.vote.response.VoteResponse;
-import com.peterczigany.vote.response.VotingSessionResultResponse;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.Collections;
@@ -140,5 +138,22 @@ public class VotingSessionService {
                   }
                 })
             .toList());
+  }
+
+  public AverageParticipationResponse getAverageParticipation(
+      String representative, String startDayString, String endDayString) {
+    LocalDate startDay = LocalDate.parse(startDayString);
+    LocalDate endDay = LocalDate.parse(endDayString);
+
+    double average =
+        (double)
+                repository.countVotingSessionsByRepresentativeBetweenDays(
+                    representative, startDay, endDay)
+            / startDay.datesUntil(endDay.plusDays(1)).count();
+
+    BigDecimal bd = new BigDecimal(Double.toString(average));
+    bd = bd.setScale(2, RoundingMode.HALF_UP);
+
+    return new AverageParticipationResponse(bd.doubleValue());
   }
 }

@@ -15,11 +15,8 @@ import com.peterczigany.vote.model.VotingSession;
 import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.model.VotingSessionType;
 import com.peterczigany.vote.repository.VotingSessionRepository;
-import com.peterczigany.vote.response.CreationResponse;
-import com.peterczigany.vote.response.DailyVotingSessionsResponse;
-import com.peterczigany.vote.response.ResultValue;
-import com.peterczigany.vote.response.VoteResponse;
-import com.peterczigany.vote.response.VotingSessionResultResponse;
+import com.peterczigany.vote.response.*;
+import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -203,5 +200,22 @@ class VotingSessionServiceTest {
                         ResultValue.ACCEPTED,
                         3L,
                         votingDTO.voteDTOs()))));
+  }
+
+  @Test
+  void testRepresentativeAverageParticipation() {
+    String representative = "Kepviselo2";
+    String startDayAsString = "2023-09-27";
+    String endDayAsString = "2023-09-29";
+
+    LocalDate startDay = LocalDate.parse(startDayAsString);
+    LocalDate endDay = LocalDate.parse(endDayAsString);
+
+    when(repository.countVotingSessionsByRepresentativeBetweenDays(
+            representative, startDay, endDay))
+        .thenReturn(2L);
+
+    assertThat(service.getAverageParticipation(representative, startDayAsString, endDayAsString))
+        .isEqualTo(new AverageParticipationResponse(0.67d));
   }
 }
