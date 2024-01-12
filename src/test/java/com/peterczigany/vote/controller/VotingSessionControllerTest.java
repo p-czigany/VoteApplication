@@ -10,6 +10,7 @@ import com.peterczigany.vote.exception.VoteNotFoundException;
 import com.peterczigany.vote.exception.VotingSessionNotFoundException;
 import com.peterczigany.vote.model.VotingSessionDTO;
 import com.peterczigany.vote.response.*;
+import com.peterczigany.vote.service.VotingSessionService;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -24,7 +25,7 @@ import org.springframework.test.web.servlet.MockMvc;
 @WebMvcTest(VotingSessionController.class)
 class VotingSessionControllerTest {
 
-  @MockBean private VotingSessionController controller;
+  @MockBean private VotingSessionService service;
 
   @Autowired private MockMvc mockMvc;
 
@@ -32,7 +33,7 @@ class VotingSessionControllerTest {
   @CsvFileSource(resources = "/validVotingSession.csv")
   void testAddNewVotingSessionSuccessfully(String votingSessionJson) throws Exception {
     VotingSessionDTO dto = TestUtils.validVotingSessionDTO();
-    Mockito.when(controller.createVotingSession(dto)).thenReturn(new CreationResponse("ABC123"));
+    Mockito.when(service.createVotingSession(dto)).thenReturn(new CreationResponse("ABC123"));
 
     mockMvc
         .perform(
@@ -48,7 +49,7 @@ class VotingSessionControllerTest {
   void testUnsuccessfulVotingSessionAdditionBecauseTimeIsDuplicated(String votingSessionJson)
       throws Exception {
     VotingSessionDTO dto = TestUtils.validVotingSessionDTO();
-    Mockito.when(controller.createVotingSession(dto)).thenThrow(TimeDuplicationException.class);
+    Mockito.when(service.createVotingSession(dto)).thenThrow(TimeDuplicationException.class);
 
     mockMvc
         .perform(
@@ -64,7 +65,7 @@ class VotingSessionControllerTest {
   void testUnsuccessfulVotingSessionAdditionBecauseRequestIsNotValid(String votingSessionJson)
       throws Exception {
     VotingSessionDTO dto = TestUtils.validVotingSessionDTO();
-    Mockito.when(controller.createVotingSession(dto)).thenThrow(IllegalArgumentException.class);
+    Mockito.when(service.createVotingSession(dto)).thenThrow(IllegalArgumentException.class);
 
     mockMvc
         .perform(
@@ -77,7 +78,7 @@ class VotingSessionControllerTest {
 
   @Test
   void testGetVoteBySessionIdAndRepresentative() throws Exception {
-    Mockito.when(controller.getIndividualVote("ABC123", "Kepviselo1"))
+    Mockito.when(service.getIndividualVote("ABC123", "Kepviselo1"))
         .thenReturn(new VoteResponse("i"));
 
     mockMvc
@@ -92,7 +93,7 @@ class VotingSessionControllerTest {
 
   @Test
   void testFailToGetVoteBySessionIdAndRepresentative() throws Exception {
-    Mockito.when(controller.getIndividualVote("ABC123", "Kepviselo1"))
+    Mockito.when(service.getIndividualVote("ABC123", "Kepviselo1"))
         .thenThrow(VoteNotFoundException.class);
 
     mockMvc
@@ -105,7 +106,7 @@ class VotingSessionControllerTest {
 
   @Test
   void testFailToGetVotingSessionResult() throws Exception {
-    Mockito.when(controller.getVotingSessionResult("ABC123"))
+    Mockito.when(service.getVotingSessionResult("ABC123"))
         .thenThrow(VotingSessionNotFoundException.class);
 
     mockMvc
@@ -116,7 +117,7 @@ class VotingSessionControllerTest {
   @Test
   void testSuccessfulGetVotingSessionResult() throws Exception {
 
-    Mockito.when(controller.getVotingSessionResult("ABC123"))
+    Mockito.when(service.getVotingSessionResult("ABC123"))
         .thenReturn(new VotingSessionResultResponse(ResultValue.ACCEPTED, 150, 120, 30, 0));
 
     mockMvc
@@ -134,7 +135,7 @@ class VotingSessionControllerTest {
   void testSuccessfulGetDailyVotingSessions() throws Exception {
     VotingSessionDTO votingDTO = TestUtils.validVotingSessionDTO();
 
-    Mockito.when(controller.getDailyVotingSessions("2023-09-28"))
+    Mockito.when(service.getDailyVotingSessions("2023-09-28"))
         .thenReturn(
             new DailyVotingSessionsResponse(
                 List.of(
@@ -169,8 +170,8 @@ class VotingSessionControllerTest {
     String representative = "Kepviselo2";
     String startDay = "2023-09-27";
     String endDay = "2023-09-29";
-    Mockito.when(controller.getAverageParticipation(representative, startDay, endDay))
-        .thenReturn(new AverageParticipationResponse(0.67));
+    Mockito.when(service.getAverageParticipation(representative, startDay, endDay))
+        .thenReturn(new AverageParticipationResponse(0.67d));
 
     mockMvc
         .perform(

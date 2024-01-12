@@ -67,12 +67,12 @@ public class VotingSessionController {
     return service.getDailyVotingSessions(date);
   }
 
-  @GetMapping(value = "/szavazasok/kepviselo-reszvetel-atlag")
+  @GetMapping(value = "/szavazasok/kepviselo-reszvetel-atlag", produces = "application/json")
   @ResponseStatus(HttpStatus.OK)
   public AverageParticipationResponse getAverageParticipation(
       @RequestParam("kepviselo") String representative,
       @RequestParam("idoszakKezdete") String startDay,
       @RequestParam("idoszakVege") String endDay) {
-    return null;
+    return service.getAverageParticipation(representative, startDay, endDay);
   }
 }
