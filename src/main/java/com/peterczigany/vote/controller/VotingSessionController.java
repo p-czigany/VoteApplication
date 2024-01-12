@@ -4,10 +4,7 @@ import com.peterczigany.vote.exception.VoteException;
 import com.peterczigany.vote.exception.VoteNotFoundException;
 import com.peterczigany.vote.exception.VotingSessionNotFoundException;
 import com.peterczigany.vote.model.VotingSessionDTO;
-import com.peterczigany.vote.response.CreationResponse;
-import com.peterczigany.vote.response.DailyVotingSessionsResponse;
-import com.peterczigany.vote.response.VoteResponse;
-import com.peterczigany.vote.response.VotingSessionResultResponse;
+import com.peterczigany.vote.response.*;
 import com.peterczigany.vote.service.VotingSessionService;
 import java.time.format.DateTimeParseException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,5 +65,14 @@ public class VotingSessionController {
   @ResponseStatus(HttpStatus.OK)
   public DailyVotingSessionsResponse getDailyVotingSessions(@RequestParam("nap") String date) {
     return service.getDailyVotingSessions(date);
+  }
+
+  @GetMapping(value = "/szavazasok/kepviselo-reszvetel-atlag")
+  @ResponseStatus(HttpStatus.OK)
+  public AverageParticipationResponse getAverageParticipation(
+      @RequestParam("kepviselo") String representative,
+      @RequestParam("idoszakKezdete") String startDay,
+      @RequestParam("idoszakVege") String endDay) {
+    return null;
   }
 }
