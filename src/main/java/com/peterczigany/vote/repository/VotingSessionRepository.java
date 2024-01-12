@@ -30,11 +30,33 @@ public interface VotingSessionRepository extends JpaRepository<VotingSession, Lo
       @Param("beginningOfDay") ZonedDateTime beginningOfDay,
       @Param("endOfDay") ZonedDateTime endOfDay);
 
+  @Query(
+      "SELECT COUNT(vs) FROM VotingSession vs JOIN vs.votes v "
+          + "WHERE v.representative = :representative "
+//          + "AND vs.votingSessionType != :votingSessionType "
+          + "AND vs.time >= :beginning "
+          + "AND vs.time <= :end")
+  long countVotingSessionsByRepresentativeBetweenTimesApartFromThisType(
+      @Param("representative") String representative,
+      @Param("beginning") ZonedDateTime beginning,
+      @Param("end") ZonedDateTime end//,
+//      @Param("excludedType") VotingSessionType votingSessionType
+  );
+
   default List<VotingSession> findDailyVotingSessions(LocalDate localDate) {
     ZonedDateTime beginningOfDay = localDate.atStartOfDay(ZoneId.systemDefault());
     ZonedDateTime endOfDay =
         LocalDateTime.of(localDate, LocalTime.MAX).atZone(ZoneId.systemDefault());
 
     return findVotingSessionsBetweenTimes(beginningOfDay, endOfDay);
+  }
+
+  default long countVotingSessionsByRepresentativeBetweenDays(
+      String representative, LocalDate startDay, LocalDate endDay) {
+    ZonedDateTime beginning = startDay.atStartOfDay(ZoneId.systemDefault());
+    ZonedDateTime end = LocalDateTime.of(endDay, LocalTime.MAX).atZone(ZoneId.systemDefault());
+
+    return countVotingSessionsByRepresentativeBetweenTimesApartFromThisType(
+        representative, beginning, end/*, VotingSessionType.PRESENCE*/);
   }
 }
